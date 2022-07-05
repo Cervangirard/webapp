@@ -1,0 +1,1 @@
+Small web application written in go. It allows me to display slides on the left side and some Rstudio products and others on the right side.

@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Déployer une app shiny !!!</title>
+    <meta charset="utf-8">
+    <script src="stagiaire_complet_files/temp_files/header-attrs-2.11/header-attrs.js"></script>
+    <link href="stagiaire_complet_files/temp_files/thinkr-css-0.0.1/thinkr.css" rel="stylesheet" />
+    <link href="stagiaire_complet_files/temp_files/thinkr-css-0.0.1/toc.css" rel="stylesheet" />
+    <script src="stagiaire_complet_files/temp_files/thinkr-css-0.0.1/remark-latest.min.js"></script>
+    <script src="stagiaire_complet_files/temp_files/thinkr-css-0.0.1/myshowhide.js"></script>
+    <script src="stagiaire_complet_files/temp_files/mark.js-8.11.1/mark.min.js"></script>
+    <link href="stagiaire_complet_files/temp_files/xaringanExtra-search-0.0.1/search.css" rel="stylesheet" />
+    <script src="stagiaire_complet_files/temp_files/xaringanExtra-search-0.0.1/search.js"></script>
+    <script>window.addEventListener('load', function() { window.xeSearch = new RemarkSearch({"position":"top-right","caseSensitive":false,"showIcon":true,"autoSearch":true}) })</script>
+    <script src="stagiaire_complet_files/temp_files/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+  </head>
+  <body>
+
+<div class="toc">
+<button class="btn btn-outline-primary d-lg-none ml-2 mt-1 btn-toc" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav" onclick="myshowhide()"><i class="fas fa-bars" aria-hidden="true"></i><span class="sr-only">Ξ</span></button>
+</div>
+    <div id="main-nav" class="collapse-lg" style="display: none;">
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+  <ul class="book-toc list-unstyled">
+<li><a class="" href="#deployer-une-app-shiny">Déployer une app shiny !!!</a></li>
+<li><a class="" href="#officiellement-bonjour">Officiellement : Bonjour !</a></li>
+<li><a class="" href="#timing">Timing</a></li>
+<li><a class="" href="#workshop-user2022">Workshop User2022</a></li>
+<li><a class="" href="#introduction-a-golem">Introduction à {golem}</a></li>
+<li><a class="" href="#shiny-server-rstudio-connect">RStudio Connect</a></li>
+<li><a class="" href="#transi1">Shinyproxy et docker !Une autre solution pour déployer</a></li>
+<li><a class="" href="#docker">Docker</a></li>
+<li><a class="" href="#encapsuler-une-application-shiny">Encapsuler une application shiny {golem} avec docker</a></li>
+<li><a class="" href="#transi2">Et ShinyProxy dans tout ça ?</a></li>
+<li><a class="" href="#shiny-proxy">Shiny Proxy</a></li>
+<li><a class="" href="#bilan-de-la-formation-generic">Bilan de la formation</a></li>
+<li><a class="" href="#eval-satisfaction-formation">Alors ? Qu’en avez-vous pensé ?</a></li>
+<li><a class="" href="#cervan-girard">Cervan Girard</a></li>
+</ul>
+      </nav>
+</div>
+    <textarea id="source">
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Déployer une app shiny !!!</span></p>
+---
+class: center, middle, inverse, title-slide
+name: deployer-une-app-shiny
+
+## Déployer une app shiny !!!
+### 20-06-2022
+<div class="logohome" style="background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABwgAAAJECAYAAAACMXA2AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wQUBzsjnt3qnQAAIABJREFUeNrs3X14ldWdN/pfXowJUJwenmOgTIXjoILjCw8zVsRxqtfUyHR0eqT2UGutTqlPtVq1I74dUanCJQqcOirVHksLKtWMCMfBY2PwGrCOEMpcDKhjAkQecEqTMJNaIiEh5uX8ofVY6wvZZO/ce9+fz1+lLXvd93ftvRP2d6+1ivr6+voCAAAAAAAASIViEQAAAAAAAEB6KAgBAAAAAAAgRRSEAAAAAAAAkCIKQgAAAAAAAEgRBSEAAAAAAACkiIIQAAAAAAAAUkRBCAAAAAAAACmiIAQAAAAAAIAUURACAAAAAABAiigIAQAAAAAAIEUUhAAAAAAAAJAiCkIAAAAAAABIEQUhAAAAAAAApIiCEAAAAAAAAFJEQQgAAAAAAAApoiAEAAAAAACAFFEQAgAAAAAAQIooCAEAAAAAACBFFIQAAAAAAACQIgpCAAAAAAAASBEFIQAAAAAAAKSIghAAAAAAAABSREEIAAAAAAAAKaIgBAAAAAAAgBRREAIAAAAAAECKKAgBAAAAAAAgRRSEAAAAAAAAkCIKQgAAAAAAAEgRBSEAAAAAAACkiIIQAAAAAAAAUkRBCAAAAAAAACmiIAQAAAAAAIAUKc2XC+1r3xdv79gW3Zt/GX372qL39S3R1/7biNYGswhwqEaMj6KhfxRFlWOjeORno3Ti5+Kwo4+NoqHDZAMAAAAAUGCK+vr6+pJ4YT17muPtLf8a3ZvXR++/r43Y32y2AHJtyMgo/tMzo3TiaXH4lDMVhgAAAAAABSBRBWHPnuboeumf4+3aZVYGAiRQ8YSpUfoXfx3lZ58rDAAAAACAPJWIgvDA+hfi7Zp/jN76GjMCkA9KKqLkL78R5V/+RpQcOVIeAAAAAAB5ZFALws7Vz0TXsrtsHwqQx4pP+WpUXPJdRSEAAAAAQJ4YlIJQMQhQYEoqovSLV0XFtK87pxAAAAAAIOFyWhB279geHT+cHX1v1EkeoBANGRnl190fZSdOkgUAAAAAQELlrCBsf/Ce6FnzI4kDpEDpedfHkIsvFwQAAAAAQAJlvSDs3rE99s+/NqK1QdoAafoBc9TkGPb9H9lyFAAAAAAgYbJaEHaufia6fnJTRE+HpAHSaMT4GHL9vVF69DGyAAAAAABIiKwVhPsffSi6V82XMEDalVTEkLkrlYQAAAAAAAmRlYJw3/xbonfjE9IF4B1KQgAAAACAxBjwglA5CMCHKqmIT/24zpmEAAAAAACDrHggH0w5CMBH6umIt2ZOj772fbIAAAAAABhEA1YQ7n/0IeUgAB+vtSHaf3iXHAAAAAAABtGAFIQH1r8Q3avmSxOAT9S78Yk4sP4FQQAAAAAADJJDPoOwZ09ztF/zhYieDmkCcHCcRwgAAAAAMGgOeQXh/nuuUw4C0D89HbH/kR/KAQAAAABgEBxSQdi5+pnoe6NOigD0W8+aH0XPnmZBAAAAAADkWMYFYV/7vuj6yU0SBCBjHUvvFwIAAAAAQI5lXBB2rHjM1qIAHJLejU9YRQgAAAAAkGMZFYR97fui+9kHpAfAIet86hEhAAAAAADkUEYFYWftP1k9CMCA6PmFghAAAAAAIJcyKgjffnqR5AAYGD0dcWD9C3IAAAAAAMiRfheE3Tu2R+x3XhQAA6d78wYhAAAAAADkSL8LwgPPrZQaAAOqZ8PTQgAAAAAAyJF+F4Q9L9sGDoABtr85+tr3yQEAAAAAIAf6VRD2te+LaG2QGgAD7u0d24QAAAAAAJAD/SoIfXgLQLZ0b/6lEAAAAAAAcqBfBWFPo9WDAAAAAAAAkM/6t8XovjaJAZAVPVteFAIAAAAAQA4UiwAAAAAAAADSo18FYW/jKxIDAAAAAACAPNa/LUbbfysxAAAAAAAAyGO2GAUAAAAAAIAUURACAAAAAABAiigIAQAAAAAAIEUUhAAAAAAAAJAiCkIAAAAAAABIEQUhAAAAAAAApIiCEAAAAAAAAFJEQQgAAAAAAAApoiAEAAAAAACAFFEQAgAAAAAAQIooCAEAAAAAACBFFIQAAAAAAACQIgpCAAAAAAAASBEFIQAAAAAAAKSIghAAAAAAAABSREEIAAAAAAAAKaIgBAAAAAAAgBRREAIAAAAAAECKKAgBAAAAAAAgRRSEAAAAAAAAkCIKQgAAAAAAAEgRBSEAAAAAAACkiIIQAAAAAAAAUkRBCAAAAAAAACmiIAQAAAAAAIAUURACAAAAAABAiigIAQAAAAAAIEUUhAAAAAAAAJAiCkIAAAAAAABIEQUhAAAAAAAApIiCEAAAAAAAAFJEQQgAAAAAAAApoiAEAAAAAACAFFEQAgAAAAAAQIooCAEAAAAAACBFFIQAAAAAAACQIgpCAAAAAAAASBEFIQAAAAAAAKSIghAAAAAAAABSREEIAAAAAAAAKaIgBAAAAAAAgBRREAIAAAAAAECKKAgBAAAAAAAgRRSEAAAAAAAAkCIKQgAAAAAAAEgRBSEAAAAAAACkiIIQAAAAAAAAUkRBCAAAAAAAACmiIAQAAAAAAIAUURACAAAAAABAiigIAQAAAAAAIEUUhAAAAAAAAJAiCkIAAAAAAABIEQUhAAAAAAAApIiCEAAAAAAAAFJEQQgAAAAAAAApoiAEAAAAAACAFFEQAgAAAAAAQIooCAEAAAAAACBFSkWQICUVUTT6ZDkAqbRj4tnxSn1z3t/H/1pxWIwcclhERBx9xJD41OF+1AIAAAAAyeJTy0FWPGFqHDb1/4iyk/4sioYOEwiQWq/UN8ff73qz4O5rXGlRnDL0sDjlj4bGiSOGxMlHDjfZAAAAAMCgUhAOkqKjJseQGxZGyZEjhQFQwBq7+6Jxb1c8vrcrYtebMa701/Gl/2VITP3jP1IWAgAAAACDQkE4CA678M6oOP9rggBIocbuvli4pz0W7mmP0w5viu/8b/8tzhk7QjAAAAAAQM4oCHOppCKGzF0ZpUcfIwsAYv2B3ljfsCdO+5//pSgEAAAAAHKmWAQ5ohwE4COsP9AbFzfsiWvWvx7N7Z0CAQAAAACySkGYI4dfvUg5CMDHenxvV0xbvzOe2v6fwgAAAAAAskZBmAOl510fh5/2eUEA8Ikau/viitf/K27fuCveOtAtEAAAAABgwCkIs6zoqMkx5OLLBQFAvzzYuj+u/eUuW44CAAAAAANOQZhNJRUx5IaFcgAgI6va39lydPtv9gkDAAAAABgwCsIsKv3iVVFy5EhBAJCxxu6+uGTTr5SEAAAAAMCAURBmy5CRthYFYED8riS03SgAAAAAMBAUhFlSdtHNQgBgwDR298Utm3bHWwe6hQEAAAAAHBIFYTYMGRnlZ58rBwAG1Kr2rpi1aZcgAAAAAIBDoiDMgsO+dKUQAMiKx/d2xWP1zYIAAAAAADKmIBxoJRVRXvW3cgAga/5+15ux/Tf7BAEAAAAAZERBONCBTvpSFA0dJggAsmrev7cIAQAAAADIiIJwgJV/+VIhAJB1q9ptNQoAAAAAZEZBOJCGjIzSo4+RAwA58cPdv43m9k5BAAAAAAD9oiAcQCWnfkkIAORMY3dfLN26RxAAAAAAQL8oCAfQ4eecLwQAcmrhnnarCAEAAACAflEQDhTbiwIwSKwiBAAAAAD6Q0E4UEH+6ZlCAGBQLNzTHm8d6BYEAAAAAHBQFIQDpHTiaUIAYNDUvvGmEAAAAACAg6IgHCCHnfznQgBg0Dzyq98IAQAAAAA4KArCgTBkZJQcOVIOAAya9Qd6Y/tv9gkCAAAAAPhECsKBCNH5gwAkQO3uNiEAAAAAAJ9IQTgASsb9qRAAGHS1//WWEAAAAACAT6QgHAAl48YLAYBBt/5AbzS3dwoCAAAAAPhYCsIBcNjRxwoBgETY8p/tQgAAAAAAPpaC8FCVVETR0GFyACARNv9GQQgAAAAAfDwF4SEqGn2yEABIjG3tbwsBAAAAAPhYCsJDDfBPFIQAJMeq9i4hAAAAAAAfS0F4iIqGDRcCAImy/Tf7hAAAAAAAfCQF4aEGOPKPhQBAouzv7hUCAAAAAPCRFISHGuDIzwgBgERp3u8cQgAAAADgoykIAaDA/GeHghAAAAAA+GgKwkNUduIkIQAAAAAAAJA3FIQAAAAAAACQIgpCAAAAAAAASBEFIQAAAAAAAKSIgvAQFB01WQgAAAAAAADkFQUhAAAAAAAApIiCEAAAAAAAAFJEQQgAAAAAAAApoiAEAAAAAACAFFEQAgAAAAAAQIooCAEAAAAAACBFFIQAAAAAAACQIgpCAAAAAAAASBEFIQAAAAAAAKSIghAAAAAAAABSREEIAAAAAAAAKaIgBAAAAAAAgBRREAIAAAAAAECKKAgBAAAAAAAgRRSEAAAAAAAAkCIKQgAAAAAAAEgRBSEAAAAAAACkiIIQAAAAAAAAUkRBCAAAAAAAACmiIAQAAAAAAIAUKRUBAEBu1K2ri7a2NkGQOieffGJUjhqVuOuqranNyzyrplZ5Un2Mlqam2LLllby77uHDh8fkKZP93DMP3uvMnddjHvwOkbafURERY8aMjeMmHOvFlLJ5L8TfVfva98XbO7Z5YuZI2YmThJBgCkIAgCyqramNlcufjtd37oiOzi6BkFojjhgeJ510Ylz0ja8P2odLLU1N8WT1iviXF1+K3S0teZvlnXPujtGVlfEXZ5weX5k+raA+OD2UuV26+JHY9G9b8npuIyLGjR0TZ571l3HJjEvz8vqXLl4Sdes3xqsNDXk7BxXlZfEnY4+Os88+K6ZNvyAvXw+F8F53KK+hP/vzP/P+WCCvx6T8DnEottZvi2WPPBYvv/xKtO7N7y8LVpSXxUnHHx9VXzzHF5Y+wYrq5bHupfXx8muvpe7fgUn8XbWvfV901v5TvF27LKK1wRM0hzr/4E19fBQN/aOIiCiqHBvFIz8bERGlEz8XERGHHX1sFA0dJrgcKerr6+s72P/zWzMvir436qT2u/COmhyfWrBMEAAD4LH65vj7XW8KYgD8X2M+HV+fMFIQCfggYN7cedG4c5cw4APOm1oVN8y6MadjLl28JJY9Xl1wH9BUlJfF5ZfNyMsSY6A8cO+i+Kdnnim4uR1xxPD4znevyJsPYOvW1cW9C+8ruEJq3Ngx8e3v/I+8WZlWqO91mb4//u2558ZV116ZunuvramNH97/YN6XUR/mrDNOjzvuuiNvrve2m2+LNS++VJDPs3Fjx8S8+XN9UekDVlQvj0ceWVaQr798/V31wPoX4sB9V0b0dJiQvPpl+J0iseTkM6J45B9H8cjPWI2YBQrCQwlPQQgwYBSEA0dBOPjq1tXFbbd934dz8DFOnTQxFty3MCdjFfKHc7/zrb+7OG9XnB2KmVdfFxs2bTa3g2xF9fJ46OHFBftzr6K8LO644/bEl4RpeD1kIm0lxtLFS+LHP320oO9xdGVl/MMDCxM9py1NTXHNVdcV/CreivKyuP/+f7D16LtzPvvWOXm/YrfQfp9pf/Ce6FnzIxNQSIaMjOIxE6N43IlROvFzVhweomIRAAAM7D8M5829WzkIn2DDps1xz5y7sz7OiurlBV8ORkT8+KePxorq5al6Dt0z5+5UlCE//umjUbcuuV/U3Vq/raDLwYiIjs6umDf37mhpakrsNS5dvEQ5+BEad+6Ka666LtHzN1Dq1tUVfDkYEbG7pSUW3fdgoq9x9q1zUrHFb0dnV9w+a7Z/A75bCCsHP9qyx6tz/j68/9GHlIOFaH9z9NbXRPeq+dF551firb87Odqu+Jtof/CeOLD+hehr3yejflAQAgAMoEX3PWg7GThIz69dG1vrt2V1jEceSc+OHw89vDgVH4BHvFNKraqpTc3c/uiH/3dir23e3Hmp+FJM6962WLr4kUReW0tTUyx7vNoPlY+xu6Ul5t+1wHtFAVnz4ktZ/x0iU7U1takqina3tMTSxUtS+/6SltWih6qjsyuerF6Rs/G6XtkU3avmCz4tWhuiZ82P4sAPvvleYbj/0Yeie8d22XwCBSEAwAD+47Bu40ZBQD8+KHj6qZVZe/yli5ekqrDP9Qcvg+nhB9P1bfDGnbsSuYpwa/22VJ21+/zatYm8rierV9i54CBs2LS5oFda162rS93Z10n9WbBy+dOpe32tXJG+e/6dtKwWHQg7d+zI2VidC78r8DRrbYjuVfNj/01To+3S02Pf/FviwPoX5PIhFIQAAAOk5tnnfEAH/bTp37Zk7bHr1qevsP+XFGynGhHx8muvpW5uf/HPyftQI5sFfxJ1dHZFbQJXrqbldT8QCnlV+bOrnk3dfCbxZ0FLU1Mqt5ls3duW6O2ws+WBexfZVrQ/z5PfvJmTcQ6sfyFif7PAecf+5ujd+EQc+ME3o+3S06P9wXusLHwfBSEAwAB5vXGHEKCfsvmN69d37pBnAapbV5fKL2PUN2x1TQmw+V//zes+j72zVeySgry3//iPX6VuPjs6uxK3zeiWLa+k9vW1tT5dRVndurqoXr4iOHif/ewf52Sct/+lVth8uP3N0bPmR++sLLzib6Jz9TOpj0RBCAAwQNL4wQwMhGytyEnrit7aAj+bL20fQL73fO7oTNw17W5uSt087Nmzx+s9zxXqVohp2170d3bt2pmo60nilwhypaWpJUX32hTz5t7tDbWfjqyszMk4vf++Vth8staG6Hr4mmi78ITY/+hD0bMnnatOFYQAAEDBSdqKAgZOmj6AfL8krhJLYwmfq+3RyOIc7m1TrBaQfSk6a5jkmH/XglSdcz1Qzj7n7NwMZHtR+qOnI7pXzY/2q945qzBtRaGCEAAAKDhJW1EAQHLUPvucEApE4/bXhZAQadl2euniJbFh02YT3k/jxo6J4yYcKwgSrXfjE+8VhX3t+1JxzwpCAAAAAFJjw6bN0dLUJAigX7bWb4tlj1cLIgMXfv2rQiBv9G58It761uTY/+hDBV8UKggBAAAASJWlix8RAtAvt8+andozrg/FuLFjompqlSDIL+9uPfrWlefEgfUvFOxtKggBAAAASJV16+uEABy0226+LZHnASddRXlZ3HTLTYIgf+1vjgM/+Gbsu/3KglxNqCAEAAAAIFVa97bFiurlggA+UW1Nbax58SVBZODyy2Y4e5CC0FtfE299a3LBrSZUEAIAAACQOqtXrxEC8LFamppiwYIfCCIDp06aGNOmXyAICkdPxzurCeffUjCrCRWEAAAAAKTOqw0NsbV+myCAj3TT9bc4dzADoysr4/qbZwqCgtS78Yl4a+b06N6xPe/vRUEIAAAAQCo9/dRKIQAf6oF7F0Xjzl2CyMC1110dlaNGCYLC1doQ+285P++3HFUQAgAAAJBKz69dKwTgD9Stq4vq5SsEkYHpF0yLyVMmC4LC9+6Wo52rn8nbW1AQAgAAAJBKHZ1dsXTxEkEA72lpaop5c+8WRAZOGD8+rrr2SkGQKl0PXxPtD96Tl9euIAQAAAAgtdau+YUQgPfMv2tBtO5tE0Q/VZSXxew7ZwmCVOpZ86PYN/+WvLtuBSEAAAAAqdW4c1dsrd8mCCCWLl4SGzZtFkQGZs78nnMHSbXejU/kXUmoIAQAAAAg1ZY98pgQIOW21m+LZY9XCyID502tiqqpVYIg9fKtJFQQAgAAAJBqdRs3CgFS7vZZs6Ojs0sQ/TS6sjJumHWjIOBdvRufiI6VP8uLa1UQAgAAAJBqHZ1dsXTxEkFASt12822xu6VFEP1UUV4W358zWxDwAW8/fmt0rn4m8depIAQAAAAg9X7+bK0QIIVqa2pjzYsvCSIDl182I46bcKwg4EN0PXxNdO/YnuhrVBACAAAAkHq7W1qibl2dICBFWpqaYsGCHwgiA6dOmhjTpl8gCPgY+285P/ra9yX2+hSEAAAAABARy594UgiQIjddf4tzBzMwurIyrr95piDgk/R0xL7bv53Yy1MQAgAAAEBEvPzaa9HS1CQISIEH7l0UjTt3CSID1153dVSOGiUIOAh9b9TF/kcfSuS1KQgBAAAAICI6Orui5tnnBAEFrm5dXVQvXyGIDEy/YFpMnjJZENAP3avmJ/I8QgUhAAAAALxr5YqnhQAFrKWpKebNvVsQGThh/Pi46torBQEZ2D//2sRdk4IQAAAAAN7VurctamtqBQEFav5dC6J1b5sg+qmivCxm3zlLEJDxLxgNidtqVEEIAAAAAO9Ta5tRKEhLFy+JDZs2CyIDM2d+z7mDcIi6n30gevY0J+Z6FIQAAAAA8D4bNm2OlqYmQUAB2Vq/LZY9Xi2IDJw3tSqqplYJAg5VT0d0LLozMZejIAQAAACAD3iyeoUQoIDcPmt2dHR2CaKfRldWxg2zbhQEDJDe+proemVTIq5FQQgAAAAAH/D86ueFAAXitptvi90tLYLop4rysvj+nNmCgAF2YOnCRFyHghAAAAAAPqB1b1vU1tQKAvJcbU1trHnxJUFk4PLLZsRxE44VBAywvjfqErGKUEEIAAAAAB9i5fKnhQB5rKWpKRYs+IEgMnDqpIkxbfoFgoAsScIqQgUhAAAAAHyIVxsaYmv9NkFAnrrp+lucO5iB0ZWVcf3NMwUBWZSEVYQKQgAAAAD4CE8/tVIIkIceuHdRNO7cJYgMXHvd1VE5apQgIMsGexWhghAAAAAAPsK69XVCgDxTt64uqpevEEQGpl8wLSZPmSwIyIG+N+qie8f2QRtfQQgAAAAAH6F1b1usqF4uCMgTLU1NMW/u3YLIwLixY+Kqa68UBORQ51NLBm1sBSEAAAAAfIxVq54VAuSJ+XctiNa9bYLop4ryspg3f64gIMd6Nz0dfe37BmXsfhWERZVjzRYAAAAAqdK4c1dsrd8mCEi4pYuXxIZNmwWRgZkzv+fcQRgMPR1xYN3aQRm6XwVh8cjPmiwAAAAAUmfZI48JARJsa/22WPZ4tSAycNYZp0fV1CpBwCDpWvHgoIxri1EAEmH7vgNCAAAAEqtu40YhQILdPmt2dHR2CaKfRldWxh133SEIGEytDdGzpznnw/arICwZN8FEAZAVv+3uFgIAAJBYHZ1dsXTxEkFAAt0z5+7Y3dIiiH6qKC+L78+ZLQhIgK6X/jnnY/avIKz8jFkCICs2tr8tBAAAINHWrvmFECBhamtqY1VNrSAycNGF0+O4CccKAhLg7dplOR+zXwVh6dHHRJRUmCkABlRze2c0dvcJAgAASLTGnbuibl2dICAhWpqaYsGCHwgiA6dOmhiXzLhUEJAUg7DNaL/PICw+9vMmCoABteO3nUIAAADywvInnhQCJMTsW+c4dzADI44YHtffPFMQkDBvb/nXnI7X74Kw9C/+2iwBMKBebGkTAgAAkBdefu21aGlqEgQMsgfuXRSvNjQIIgM33XJjVI4aJQhImO5/+XlOx+t3QXj4lDPNEgADat3eDiEAAAB5oaOzK2qefU4QMIjq1tVF9fIVgsjA9AumxeQpkwUBCdS77YWcjtfvgrBo6LAoPuWrZgqAAbFlT1usP9ArCAAAIG/8/NlaIcAgaWlqinsX3ieIDIwbOyauuvZKQUBS9XRE1yubcjZccSZ/qWzql00UAAOi5le/FQJAyg0fPlwIAOSV3S0tUbeuThAwCObftSB2t7QIop8qysti3vy5goCE6978y5yNlVlBeOKkKDrKMmQADk1ze2cs3NMuCArGhPHHCQEyYIsjAPLR8ieeFALk2Irq5bFh02ZBZGDmzO85dxDyQM+WF3M2VnGmf7HiO7PNFACH5Pk3rB6ksEz88/8uBOinE8aPFwIAeWnDps3R0tQkCMiRrfXb4qGHFwsiA2edcXpUTa0SBOSBvjdyt0NBxgVh6dHHRMlZ3zZbAGSkub0zfrhbQUhhqZpaFSOOsFUi9Mfk004RAgB568nqFUKAHLl91uzo6OwSRD+NrqyMO+66QxCQR7p3bM/JOMWH8peHfOM7EUNGmi0A+u3B11qisbtPEBSc86d9SQhwkEYcMTwumXGpIADIW8+vfl4IkAP3zLnbuYMZqCgvi+/PmS0IyDPdr2/NyTiHVBAWDR0W5dfdb7YA6Jcte9riwdb9gqAgXTLjUlsmwkH6znevEAIAea11b1vU1tQKArKotqY2VnmdZeSiC6fHcROOFQTkmZ7G13IyTvGhPkDZiZPisAvvNGMAHJS3DnTHFS//WhAUtNl3zorRlZWCgI/xrb+72DkoABSE2mefEwJkSUtTUyxY8ANBZODUSRPt1gF5qvf1LTkZp3ggHqTi/K9F8SlfNWsAfKJZm3bZWpSCVzlqVDzx1M/ivKlVUVFeJhB4nxFHDI9bZ93owwoACsaGTZtja/02QUAWzL51jnMHM/yd+/qbZwoC8lTfG3U5Gad4oB5o2PVzlYQAfKy7N70Rj+/1iz3pccOsG+PRR38S0y+YFuPGjhEIqTXiiOFx6qSJ8b3vXhH/z/+70spBAArO00+tFAIMsAfuXRSvNjQIIgM33XJjVI4aJQjIYz17mrM+RulAPtiw6+fGvvkRvRufMHsA/J7ndrbGwj3tgiB1KkeNiquuvfK9P7c0NcWWLa8U5L027f51vN64I15++ZVo3dtm8g/CuLFjYsL442Lin//3gry/MWPGOvMEgFRYt75OCDCA6tbVRfXyFYLIwPQLpsXkKZMFwe8pOmpylJx8RpRO/FzOxuzb91b0NNZHRERv839EX8vOnK2MKwQ9Lb+OkiNHZnWM0oF+QCUhAB/03M7WuLhhjyAg3ikMq1LwTc7amtr4ycNLYndLi0n/EKdOmhiXXfFt5RkAFIjWvW2xonp5TJt+gTDgELU0NcW9C+8TRAbGjR3ze19QheJTvhoVl3w360XTRzrt83/wX3Xv2B5vb9kYPZtfit76GpP0Ebo3/zLKTpyU3edHNh502PVzo+yyfzCDAMSiV36tHIQUqppaFU889bM4ddJEYbxPRXlZ3Drrxlhw30LlIAAUmNWr1wgBBsD8uxb4omHR5oOBAAAgAElEQVSG/9aYN3+uIHhHSUWU3/pkDLt+7uCVgx+h9OhjouL8r8Ww7y+KT/10S5Sed31ESYU5+4C+fdnfmak4Ww9cfva5MWReTcSQkWYSIIXeOtAdd296I76/e68wIMUW3LcwThg/XhDvuuOO252/BwAF6tWGhthav00QcAhWVC+PDZs2CyIDM2d+z7mDvKOkIobMXZn11WcDoWjosBhy8eXxqR/XRfGEqebufXpf35L1MYqz+eClRx8Tn1r0nIkFSJntv9kX1/5ylzMHgYiImH3nrKgoL0t9DudNrXIWCAAUuKefWikEyNDW+m3x0MOLBZGBs8443RcReU/5//lIlB59TF5dc9HQYTHs+4vsTPk+fe2/zfoYxbma2PJbn7SaECAFHqtvjtN/+R+xqr1LGEBEvHPu4hfOPDPVGVSUl8UlM77hyQAABe75tWuFABm6fdbs6Oj0WUJ/ja6sjDvuukMQRMQ7Zw7mw8rBj1J+9rlKwt9pbcj+8yVX91J24qQYvuSlOOzCO+0nC1CAtuxpiy+t2Rp/v+tNYQB/4EtfPj/V93/S8cfb7gcAUqCjsyuWLl4iCOine+bc7dzBDFSUl8W1110tCP7/58Ql3837eyg/+9woOevbJjMHinP+BD3/a/GpH9e9c/CkFYUAeW/Lnra4Zv3rcfam3bH+QK9AgA913IRjY8QRw1N7/1NOP82TAABSYu2aXwgB+qG2pjZW1dQKIgMXXTjdMQa8p3jC1Cg5sjA6l6FX3KA/ioiuVzZl9zkzGDf1u4Mnhy95Kcou+4coOsqbGEC+eW5na8x48Z1i8PG9tgABPtmnP/3p1N77n550kicAAKRE485dsbV+myDgILQ0NcWCBT8QRAZOGD8+LplxqSB4T8nE0wvqfsqvu9+kZlnxoE/y2efGpxYsi6EPvLv96IjxZgUgodbt/m3cvemNmPJ8Q1zcsMc5g0C/fPazf5zaez9uwrGeAACQIsseeUwIcBBm3zrHuYMZGHHE8Jh95yxB8HtKxhVWt1J24qTU90W9zb/O6uOXJubJe+TIqDj/a1Fx/teiZ09zdL30z9Gz+aXo3fZCRE+HVzfAINj+m33xcmtHvPzb/bF6b0c0dvcJBcjYsKFDhQAApELdxo3R0tTkDGL4GA/cuyhebWgQRAZuuuVG7y/8gZLKzxTcPZVNuyK6Hr4mtXPa2/yrrD5+aSKfyO+WhXH+1yIiomdPc3S/vjV6Guujt/GV6Gv/bfTt3qI4BDhEbx3ojh1790dERPvbvbGjrTN2d3TFrw+8bdtQAACADHV0dkXNs8/Z/g8+Qt26uqhevkIQGThvapVzB/lQhXL+4PsdPuXM6HrY3GZLab48sUuOHBlx2uc/9H/v3rE9etvfyvl1/fub7fE//3GlZ1EB+fSIT8dZf3WmIPLAY/XN8fe73hQEAAAAifTzZ2sVhPAhWpqa4t6F9wkiA+PGjokbZt0oCFKjaOiwKDpqcvS9UZfK++/b15bVxy8thJBKjz5mUMYt+bfNEc3/5VUKAAAAwO/Z3dISdevqrPSBD5h/14LY3dIiiH6qKC+LefPnCoLUKTn5jOhOaUHY+/qWrD5+sacXAAAAAAy85U88KQR4nxXVy2PDps2CyMDll81w7iCpVDJughCyREEIAAAAAFnw8muvRUtTkyAgIrbWb4uHHl4siAycdcbpMW36BYIglUr/5DghZImCEAAAAACyoKOzK56sXiEIiIjbZ82Ojs4uQfTT6MrKuOOuOwRBapUcOVIIWaIgBAAAAIAseX7180Ig9e6Zc7dzBzNQUV4W1153tSBgxPhU3nbff+3M6uMrCAEAAAAgS1r3tkVtTa0gSK3amtpY5TWQkYsunB6Tp0wWBKlXNPSP0nnj+5uz+vAKQgAAAADIotpnnxMCqdTS1BQLFvxAEBk4Yfz4uGTGpYKASHFBmGUKQgAAAADIog2bNkdLU5MgSJ3Zt85x7mAGRhwxPGbfOUsQ8K7icScKIRu5igAAAAAAsuvJ6hVCIFUeuHdRvNrQIIgM3HTLjVE5apQggKxSEAIAAABAlj2/+nkhkBp16+qierlSPBPnTa1y7iCQEwpCAAAAAMiy1r1tsaJ6uSAoSI07d8XW+m0R8c65g/cuvE8oGRg3dkzcMOtGQQA5USoCAAAAAMi+1avXxLTpFwiCgnTjzBvjpJNOjJdffiVa97YJpJ8qysti3vy5ggByxgpCAAAAAMiBVxsa3ltlBYWmdW9brHnxJeVghi6/bIZzB4GcUhACAAAAQI48/dRKIQC/56wzTre6GMg5BSEAAAAA5Mi69XVCAN4zurIy7rjrDkEAOacgBAAAAIAcad3bFksXLxEEEBXlZXHtdVcLAhgUCkIAAAAAyKG1a34hBCAuunB6TJ4yWRDwCXqb/0MIWaAgBAAAAIAcaty5K7bWbxMEpNgJ48fHJTMuFQQchL6WnULIAgUhAAAAAOTYskceEwKk1IgjhsfsO2cJAvh4JRVZfXgFIQAAAADkWN3GjUKAlLrplhujctQoQcBB6nujLpX3XTT65Kw+voIQAAAAAHKso7Mrli5eIghImfOmVjl3EPqhr32fELJEQQgAAAAAg2Dtml8IAVJk3NgxccOsGwUB/fD2Dmf2ZouCEAAAAAAGQePOXVG3rk4QkAIV5WVx0y03CQL6qXvzL4WQJQpCAAAAABgky594UgiQApdfNiOOm3CsIKCfehtfSe29F1WOzerjKwgBAAAAYJC8/Npr0dLUJAgoYGedcXpMm36BICADvdteSO29F4/8bHYf39MLAAAAAAZHR2dX1Dz7nCCgQI2urIwrr75CEGRdz57mgrunA+tfiOjpMLlZoiAEAAAAgEH082drhQAFqKK8LK697uqoHDVKGGRdT8uvC+6e3q75x1TPadGw4Vl9fAUhAABAAdnWsF0IAHlmd0tL1NYoCaHQ/O2558bkKZMFQU70NhdWQdizpzl662tSPacl48Zn9fEVhAAAAAVk/759BX1/9Q1bTTJQkGptMwoF5YTx4+Oqa68UBDnTvXl9Yf275p7rTGqWKQgBAAAKSKEXaG+++aZJBgrShk2bo6WpSRBQAEYcMTxm3zlLEORU76ano6+9ML4s2Ln6meh7oy71c1pS+ZmsPr6CEAAAoIA07txVsB8wb63fFq1720wyULCerF4hBCgA3/nuFc4dJPd6OqJjxWN5fxvdO7ZH109uMp8RUXLkyKw+voIQAACgwCxd/EhB3teyRx4zuUBBe37180KAPHfe1KqomlolCAZF97MPRM+e5vy9/h3bY/8t50f0dJjMISOzPoSCEAAAoMA8v3Ztwa0i3Fq/Leo2bjS5QEFr3dsWtTW1goA8NW7smLhh1o2CYPD0dET77TPycqvRjpU/Uw6+T9F/G5v1MRSEAAAABaajsytuuv6WgrmflqamuH3W7Ojo7DK5QMFbufxpIUAeqigvi5tusS0iCdDaEG/NnJ43JWHXK5virZkXxduP36ocfJ+iyrFZH0NBCAAAUIAad+6Kv/v6N/N+JWFLU1Ncc9V1sbulxaQCqfBqQ0Nsrd8mCMgzl182I46bcKwgSIbWhnjrW5Ojc/Uziby8nj3N0bHyZ9F2xd9E551fib436szZBxSP/GzWxygVMwAAQGFq3LkrLr74m3HRhdPjkhmX5t31L128JJY9Xm3lIJA6Tz+10jaFkEfOOuP0mDb9AkGQLD0d0fXwNdG17K4o/auLo3Ti56LsxEk5vYSuVzZFRERv86+jt/lX0bPlxejbvcVKwYNQMm5C1sdQEAIAABSwjs6u+PFPH41lj1fHSccfH2OPPjqOHX9MYq9387/+W+zZsydefu01xSCQWuvWW0kB+WJ0ZWVcefUVgiC59jdH96r50b0qolMaeaOk8jNZH0NBCAAAkAIdnV2xYdPm2LBpszAAEq51b1usqF5uRRIkXEV5WVx73dVROWqUMIABVXp09r/U6QxCAAAAAEiY1avXCAES7m/PPTcmT5ksCGBgjRifk2EUhAAAAACQMK82NMTW+m2CgIQaN3ZMXHXtlYIABlzxkWNzM46oAQAAACB5lj3ymBAgoc486y+FAGRF8bgTczOOqAEAAAAgeeo2bhQCJNSo0Z8RApAVpRM/l5NxFIQAAAAAkEAdnV2xdPESQUACNe3+tRCArCg7cVJOxlEQAgAAAEBCrV3zCyFAAi17vDpampoEAQysEeNzNpSCEAAAAAASqnHnrthav00QkDAdnV0x+9Y5ggAGVMlJn8/ZWApCAAAAAEiwhx/8kRAggV5taIgV1csFAQyY0omn5mwsBSEAAAAAJNjLr71mK0NIqIceXuz1CQyYspP+LGdjKQgBAAAAyDvnTa2Kb/3dxVFRXlbw99rR2RU1zz5n0iGhr89F9z0oCODQjRgfRUOH5Ww4BSEAAAAAeeWsM06PG2bdGJfMuDRmzvxeKu7558/WmnhIqDUvvhS1NV6jwKEpnXJeTsdTEAIAAACQV/7i83/x3n+umloVJ4wfX/D3vLulJerW1Zl8SKgf3v+grUaBQ1J2+l/ldDwFIQAAAAB57fwLvpSK+1z+xJMmGxKqdW+brUaBzA0ZGaVHH5PTIRWEAAAAAOS1qqlVMeKI4QV/nxs2bbZCCRLMVqNApkpOzf2XnRSEAAAAAOS9L5z9hVTc55PVK0w2JNhPHl4iBKDfDj/n/JyPqSAEAAAAIO99Zfq0VNzn86uf/70/O5cQkmV3S0vcM+duQQAHbxC2F41QEAIAAABQACpHjYpTJ00s+Pts3dsWD9y76L0//+KfXzD5kDCramqV98BBK/2riwdnXNEDAAAAUAiqvnhObNi0ueDvs3r5iti5Y0dERCruF/LRvQvviyemTBYE8IkOP+d/H5RxrSAEAAAAoCBUTa2KEUcMT8W9bti0WTkICWarUeBgFB01OUqOHDkoYysIAQAAACgY50/7khCARHh+7drYWr9NEMBHKvvy/xi0sRWEAAAAABSMqV88JyrKywQBDLqOzq6YN3eeIIAPN2RkHH7a5wdteAUhAAAAAAWjctSoOOn44wUBJELjzl3xwL2LBAH8gbKLbh7U8RWEAAAAABSUC776FSEAifFPzzxjq1Hg95VUxOFTzhzUS1AQAgAAAFBQJk+ZHKMrKwUBJIKtRoEPKv3iVVE0dNigXoOCEAAAAICC89dfrBICkBiNO3fFiurlggAihoyMimlfH/TLUBACAAAAUHAumXFpVJSXCQJIjIceXhwtTU2CgJQru+jmQV89GKEgBAAAAKBATT7lFCEAidHR2RWzb50jCEizISOj/OxzE3EpCkIAAAAACtJF3/i6EIBEebWhwVajkGLl192fmGtREAIAAABQkI6bcGyMGztGEECi2GoU0ql4wtQoO3FScq7HlAAAAABQqM486y+FACRKR2dXzL9rgSAgTUoqYugNdyfqkhSEAAAAABSsS2ZcGiOOGC4IIFE2bNoctTW1goCUOPzqRVE0dFiirklBCAAAAEBBm3LaZCEAifPD+x+01SikQPGEqXH4aZ9P3nWZGgAAAAAK2Ze+fL4QgMRp3dsWi+57UBBQyIaMTNzWor+jIAQAAACgoB034dg4Yfx4QQCJs+bFl2w1CoWqpCKG3LYkcVuL/o6CEAAAAICCd/bZZwkBSKQf3m8VIRSism/Oi9Kjj0ns9SkIAQAAACh406ZfECOOGC4IIHFa97bFPXPuFgQUkJKzvh3lZ5+b6GtUEAIAAACQClNOmywEIJFW1dRG3bo6QUABKD7lqzH0ihuSf52mCgAAAIA0uGTGN4QAJNa9C+8TAuS54lO+GsOun5sf12q6AAAAAEiDylGj4tRJEwUBJNLulhZbjUI+GzE+hn7n5ry5XAUhAAAAAKlR9cVzhAAk1qqa2thav00QkGeKT/lqfGpBdRQNHZY/12zaAAAAAEiLqqlVMeKI4YIAEmve3HlCgDzyu21F86kcjFAQAgAAAJAyXzj7C0IAEqtx56544N5FgoA8UHLWt/PmzMEPUhACAAAAkCpfmT4tKsrLBAEk1j8984ytRiHhyi77hxh6xQ15e/0KQgAAAABSpXLUqDjp+OMFASRWR2eXrUYhqYaMjCHzaqL87HPz+jYUhAAAAACkzgVf/YoQgERr3Lkrli5eIghIkOIJU+NTi56L0qOPyf97MZ0AAAAApM3kKZNjdGWlIIBEW/Z4dbQ0NQkCEqDoqMkx7PuLomjosIK4HwUhAAAAAKn011+sEgKQaB2dXTH71jmCgAQ4/JLrCup+FIQAAAAApNLUL54TFeVlggAS7dWGhlhRvVwQMMjKTpxUUPejIAQAAAAglSpHjYqTjj9eEEDiPfTwYluNwiDreuX/a+/e46ys7zuBf2HGYQ4zzggjDEdQUIe5GC9IRAasqWxkQIqxIhYtCjTUxnvdJUatpsXbamJsjResTXSL1a3upu7rFXm5RrtrU6OZ1NZ4jXLxjgIatLDIwIRx9o9qi9xkzpz7837/Pee5fJ45zzlzPvP9nWfL6nwUhAAAAAAk1jnnfUMIQNHr2tIdN93wPUFAAXU/+ndldT4KQgAAAAASq6WtOZrGjBYEUPR+8exz8dijjwkCCuSTZx4oqylCBSEAAAAAiXbClK8IASgJS26701KjUEBbl95cNueiIAQAAAAg0eYvXBCp6ipBAEVv/YaNccetdwoCCqT37c6ymSJUEAIAAACQeO0TJggBKAlPPPmUpUahgLYs+XZZnIeCEAAAAIDEmzvvLCEAJcNSo1BA61+NLY8vK/nTUBACAAAAkHgtbc1xeGurIICSsH7Dxlh6972CgALpvv+Gkj8HBSEAAAAARMTUqVOEAJSMhx99LDqf7hQEFMLmtdH1v/57SZ+CghAAAAAAImLWnNnRUF8nCKBk3HLzrUKAAvnN//iv0fvxppI9fgUhAAAAAHxq8qR2IQAl49116+K7131HEFAIPV3R9dB9JXv4CkIAAAAA+NQpp50qBKCkWGoUCmfbI7eX7BRhpcsHAAAAAP+mpa05Dm9tjZdefVUYQMm4a8lfRftkE9DsweARMWD/MVFx1PH92sy2px+OWO818t/1dMXHS26I2kuvL7lDVxACAAAkQKq6Kg4dc0gcPOagaBp7aNQW4XdsrXn3vVi3Zl288ebbPpgHCurU2afES9e5DwGlY9Wbb8Xtt9wRF15ygTD4DxWpqJxxYQya9rtRMXxEdrZ59rmx5fFl0f2DP5bvpz555oHoef+i7GWcJwpCAACAMtZQXxenzjolps+YFo3pdMkc97o1a+LRR34S9//tg9G1pduFBPKqY3pHLLntzli/YaMwII+axoyOAw8cFS+88KLnXwZ+vGxZTJ02NVramoVBDGybHjXf+k4MqKnN+rarp86MT9aujm0P3yToT3Utva3kpgh9ByEAAECZOry1Ne764ZKYv3BBSZWDERGN6XTMX7gg/uZv7onDW1tdTCDvTpx6ohAgj/7wD86O/3bfPXHNDdfEXT9cEiMbG4XSR11buuPG628UBFF58qVRe/UdOSkHP5OadVZERUrYn/rkmQdi2+srS+qYFYQAAABl6PDW1rjzh3eUXDG4o8Z0Ou784R3RNGa0iwrk1elzZgkB8vi+Zf7CBZ97/b/6usWRqq4STh99ttQoyTVwwhkx+Oxzc76fATW1UTnjQoFvp2vJ4tL6XXHJAAAAykuquioWX3tVWZ3TjTdd70NCIK8a0+mYOH6cICDHGurrdvm+paWtOb42c6aAMvDjZcti3Zo1gkjkE6o1r8tcmiL8vN63O6P7xWdL5ngVhAAAAGVm7plzSn5ycEeN6XSceMIJLi6QVx0zpgkBcuzyKy/b7fuWCy+5wCoCGeja0h2Lv32dIBKo+vxr87o/U4Q727r05pI5VgUhAABAmZleph9on3LaqS4ukFcd0zt8Dxrk0JzZs6J9cvsef+byKy+3ikAGXnr11XjowR8JIkkGj4iqI8bnf7dnnxsxeIT8P9X7dmdseXxZSRyrghAAAKCMNI0ZXXbTg59paWuOhvo6FxnIq5NmdAgBcvSe5cJLLtir139LjWbmL39wt6VGE6Ri4ikF23fV3CtcgO10339DSRynghAAAKCMtLW2lPX5DRkyxEUG8mr6jGmmlyDLUtVVceNNe/89aRdecoFp3gxYajRZKsdNLNi+q6fONEW4vc1rS2KKUEEIAABQRgbX1pb1+ZV7AQoUn8Z0Oo487DBBQBZ985v/uc8rHlyy6GLBZeClV1+Nxx59TBAJMKB234Lu3xTh53Xfc3n0frypqI9RQQgAAFBGmlvHCgEgy2afcboQIEumHH9cdEzv+9K97ZPb4+TplvzNxJLb7rTUaAIU4vsHt2eKcAc9XdH10H1FfYgKQgAAAADYg/bJ7ZY3hCwY2dgY19xwTcaP/9ZVl3kuZmD9ho1xx613CoKcM0X4edseub2opwgVhAAAAADwBU6aYXIJ+iNVXRVXX7e439ux1GhmnnjyKUuNknOmCHfQ0xWb711StIenIAQAAACALzB/4YJIVVcJAjJ07jkLo6Wtud/bsdRo5iw1Sj5UL7pNCNvpeeKu6Hl/bVEem4IQAAAAAPZC+4QJQoAMTBw/LmbNmZ217c1fOC8a6usE20frN2yMpXffKwhyquqI8THgoHZBbKdraXGWpgpCAAAAANgLc+edJQToo5GNjXHpFd/M6jYb0+k4/6LzhJuBhx99LDqf7hQEOTVo/iIhbOeTZx6Iba+vLLrjUhACAAAAwF5oaWuOpjGjBQF7KVVdFZcsujga0+msb7tjekdMOf44IWfglptvFQI5ZYpwZ11LFhfdMSkIAQAAAGAvnTDlK0KAvfS1mTOjfXLuSoILLj7PUqMZeHfduvjudd8RBDllivDzet/ujO4Xny2qY1IQAgAAAMBemr9wgUIC9sLhra1x4SUX5HQflhrNnKVGyTVThDvbuvTmojoeBSEAAAAA9MHkST7whD1pqK+LxddelZd9WWo0c3ct+SshkFOmCD+v9+3O2PL4sqI5HgUhAAAAAPTBKaedKgTYg8uvvCwn3zu4OxdcfF6kqqsE30er3nwrbr/lDkGQM1VHjI+BbdMFsZ3u+28ommNREAIAAABAH7S0Ncfhra2CgF04eXpHTr93cFca0+k495yFws/Aj5cti+WvrBAEOZO64NtC2N7mtUUzRaggBAAAAIA+mjp1ihBgB01jRse3rrqsIPueNWe24j4DXVu648brbxQEOVMxfEQMnHCGILbTfc/l0fvxpoIfh4IQAAAAAPpo1pzZ0VBfJwj4VKq6Km686fqCHsPia6+y1GgGLDVKzu8P8y8SwvZ6uqLrofsKfhgKQgAAAADIwIlTTxQCfGrumXPy+r2Du2Kp0cxZapRcMkW4s22P3F7wKUIFIQAAAABk4PQ5s4QAn5q/cEFRHIelRjPTtaU7brn5+4IgZ0wR7qCnKzbfu6Sgh6AgBAAAAIAMNKbTMXH8OEGQeE1jRhfV8Vyy6I8tNZqBl159NR568EeCICdMEe6s54m7ouf9tQXbv4IQAAAAADLUMWOaEKDItLQ1x9dmzhREBv7yB3fHujVrBEFO1Jx/RURFShDb6Vp6W8H2rSAEAAAAgAx1TO+Ihvo6QUCRufCSC4pusrEUdG3pjsXfvk4Q5MSAmtqonHGhILbzyTMPxLbXVxZk3wpCAAAAAOiHE6eeKAQoQpdfebmlRjNgqVFyKTXrLFOEO+hasrgg+1UQAgAAAEA/nD5nlhICipClRjN37733W2qUnDBFuLPetzuj+8Vn875fBSEAAAAA9ENjOh1HHnaYIKAIWWo0M+s3bIw7br1TEOSEKcKdbV16c973qSAEAAAAgH6afcbpQoAi9Y3z/0gIGXjiyafisUcfEwRZZ4pwZ71vd8aWx5fldZ8KQgAAAADop/bJ7TGysVEQUKTPz5OndwgiA0tuu9NSo+SEKcKddd9/Q173pyAEAAAAgCw4aYYCAorVt666TImfAUuNkisDampjn9/7E0Fsb/PavE4RKggBAAAAIAumz5gWqeoqQUCRumTRxULIwBNPPhWdT3cKgqxLnfr7EYNHCGI73fdcHr0fb8rLvhSEAAAAAJAFjel0tE+YIAgoUpYazdwtN98qBHKiau4VQtheT1d0PXRfXnalIAQAAACALJk77ywhQBGz1Ghm3l23Lr573XcEQdZVT51pinAH2x65PS9ThApCAAAAAMiSlrbmaBozWhBQxL5+zgIhZODhRx+z1Cg5YYpwBz1dsfneJTnfjYIQAAAAALLohClfEQIUsY7pHTHl+OMEkQFLjZILpgh31vPEXdHz/tqc7kNBCAAAAABZNH/hgkhVVwkCitgFF58XDfV1guijd9eti9tvuUMQZJ0pwp11Lb0tp9tXEAIAAABAlrVPmCAEKGKN6XScf9F5gsjAj5cti+WvrBAEWVU9dWZEQ6sgtvPJMw/EttdX5mz7CkIAAAAAyLK5884SAhQ5S41mpmtLd9x4/Y2CIOuqz79WCDs+35Ysztm2FYQAAAAAkGUtbc1xeKtJCCh2lhrNzKo337LUKFlXdcT4GHBQuyC20/t2Z3S/+GxOtq0gBAAAAIAcmDp1ihCgyDWm0zFv3lxBZMBSo+TCoPmLhLCDrUtvzsl2FYQAAAAAkAOz5sw2mQQl8lw18dt3XVu645abvy8IssoU4c563+6MLY8vy/p2FYQAAAAAkCOTJ/mQE0rB4muvilR1lSD66KVXX42HHvyRIMgqU4Q7677/hqxvU0EIAAAAADlyymmnCgFKQGM6Heees1AQGfjLH9wd69asEQRZY4pwFzavzfoUoYIQAAAAAHKkpa05Jo4fJwgoAZYazUzXlu5Y/O3rBEFWmSLcWfc9l0fvx5uytj0FIQAAAADkUMeMaUKAEmGp0cxYapRsqzpifAyccIYgttfTFV0P3Ze1zSkIAQAAACCHOspM6j0AABUiSURBVKZ3REN9nSCgBDSm0zH3zDmCyMC9995vqVGyKjX/IiHsYNsjt2dtilBBCAAAAAA5duLUE4UAJWL+wgXRNGa0IPpo/YaNccetdwqCrKkYPsIU4Y6yOEWoIAQAAACAHDt9ziwhQAm5/MrLLTWagSeefCoee/QxQZA1pgh3tu3hm6Ln/bX93o6CEAAAAAByrDGdjonjxwkCSkRLW3N8beZMQWRgyW13WmqUrDFFuGtdS2/r9zYUhAAAAACQBx0zpgkBSsiFl1xgqdEMWGqUbDNFuLNPnnmg31OECkIAAAAAyIOO6R0xsrFREFBCLDWaGUuNkk2mCHdt83cX9evxCkIAAAAAyJOTZnQIAUpIS1tznHjCCYLIwD0/+GshkDU1518RUZESxHZ63+6M7hefzfjxCkIAAAAAyJPpM6aZRoIS862rLjP9m4F3162L7173HUGQFQNqaqNyxoWC2MHWpTdn/FgFIQAAAADkSWM6HUcedpggoMRcsuhiIWTg4Ucfi86nOwVBVqRmnWWKcAe9b3fG1p//NKPHKggBAAAAII9mn3G6EKDEtE9uj5OnWyI4E7fcfKsQyApThLu29a4/yehxCkIAAAAAyKP2ye3RNGa0IKDEWGo0M5YaJZtMEe7C5rWx5fFlfX6YghAAAAAA8uyEKV8RApQgS41m5u//4R9i+SsrBEG/mSLctd/85G/7/BgFIQAAAADk2fyFCyJVXSUIKDHtk9tjyvHHCaKPurZ0x43X3ygIssIU4c563+6M3o839ekxCkIAAAAAKID2CROEACXogovPi4b6OkH00ao334rbb7lDEPTbgJraqPq6wnlH3S/8S59+XkEIAAAAAAUwd95ZQoAS1JhOx/kXnSeIDPx42TJLjZIV1VNnRgweIYjt9Kx6pU8/ryAEAAAAgAJoaWuOpjGjBQElqGN6h6VGM2CpUbKpau4VQthO76aNffp5BSEAAAAAFMgJU74iBChRlhrNzKo334qld/+1IOg3U4Sf98lrz/fp5xWEAAAAAFAg8xcuUDBAibLUaObu/9sHY92aNYKg30wR/oeBhx7Vt58XGQAAAAAUzuRJ7UKAEtUxvSMmjh8niD7q2tIdS+++VxD0mynC/zCgtm//cKQgBAAAys7o0WOEAOA+XzJOOe1UFzUD4445WghFoq21JdHnf+kV34xUdZVfhD56+uedQiArTBH+m4qmtj79vIIQAIC8aEw3JvK8m8aMdvELoKWtWQjl+pwae6h7SZFI4pKIBx44qqiOp64uuctSltt9vqWtOQ5vbXWTL3GDa2uFkNi/ddJx7jkLBdFH6zdsjOWvrMjyG5SE3ksbkv0aUj11Zgw4yDR+1ZFf7tPPKwgBAMiLlrZk/sFSXZ1y8QtkZGMyS+mO6R1lfX4HFFlBk+R7STp9QOKuw/Aiu6+0T07mB2HlWk6fOvsUL959dNRRRxTV8TS3jk3stUjqP/Bsb9ac2Yr+DLz11ptZ3V7Fkb+dyByTet7bGzR/UaLPf+CEM2JATd/+UUVBCABAXrRPbk/ksjvtkya4+AXS3NyUuHNOQinaPrk9kZNrxXgvSeL97Zhjv1x0x5TED6ObDj2kLM+rY3qHlQf6+JrXmE4X3TVM6jKTx33lOL+UEbH42qssNVpgg6Ylc8nmfX7rxMRf+6ojxid6ijA1/6I+P0ZBCABA3rRPSN6HydNnTHPhC2TuvLMSd84nzehIxHlOnpS8P/yL8V4yfca0RH0I2lBfV5QTe0ksajvK+LX18isv9wK+l8YffVRRHteRhx2WuGtxeGtr0ZW1hWKp0cKrPGRs4kqiAQe1R9UR4138SO4UYeXJl0bF8BF9fpyCEACAvJk776xEfZg85fjjfFhSQEn7PqeG+rrEFNLzF85zLykCjel0nHjCCYm5DqfOOqVInw8LErWkctOY0WW9lHJLW3P84R+c7UX8C6Sqq2L+wnlFeWznnPeNxE2QWR7382bNme153Ae5WCo4df7iiIrkfNVD6vzFfpE+lcgpwobWGHz2uRk9VEEIAEDetLQ1x9wz5yTiXEc2NsYFF5/nohdYkpZ5mjdvbmIK6cZ02r2kSMxfOC8R5dThra0xf+GCoj2+SxZdnIh7Xaq6Kr5x/h+V/XnOX7ggJo4f50V8D+aeOadoX/OS9H434t/+iaXcv/840+exknDvfn9y8VyuPGRsVH39xkRkWHXO96PykLF+mbZ/v5CkgrihNfb93oMZP7xi8eLFi/3KZGbd2rXx4Yf/KohyunkMTsXBh4wRRAl44deb4icbtggCdmHafqk4clitICha48aPi4re3nj2uRfK9z16fV1887JF0XpYmwteYLX77htjm5riZ0/+LLZt6ynb8/zDPzg7zjz7991L3EsK8hw7/iuT46l/fCr+38cfl+V1GNnYGN/53vVRu+++RXuMow4cVfb3ulR1VVxzzZ8V5TKvudBx0rTYvHFTvPyrV7yY7+I1r5gL+6S8RkVETBw/Lm64+Ua/lHv4Pdivpiaef+GFsn4f2p/X1z+9+sqcvb5WHtocvfsdGj3P/zSid1tZZlh1zvejeupMv0w7GDikIXrrD4qeZx8t6/OsmPKN2HfxkhhQlfk/iSkI+0FBWIZ/cCgIS4aCEHZPQUip/LE86oB0vPz8i9G1dWtZndvE8ePihpuuVw4WkVEHjoqOqV+Nt157Pd5ds7aszq2hvi6+eeklcdrvneZe4l5SMJ+VhB+sXRdvvv1O+fx9WF0VJ5341fiLO/6iqMvB7e91x044Nn714kvx4b9uKKvnQ9OY0XHptxYlphz8zLHtx8ZhrS3xxsrXyu6aZvqad+4ffb1k/iHms3Jo5fIVZfcalaquitN+95S46uqrvNH8Am2HH1a270P7Y8rxx8WfXn1lzieBKw9tjorxU2PbilURG1aXTX4DDmqPwVf8MKqOmeSXaU/X/ssz4jdP/33EbzaV1bkNOKg9qi/+i0j9zuz+b6u3t7fXr0tmXvjlc7Fq5RuCKCNDGobElK+eIIgScN8ra+O/vPWRIGAX/nz0kDirbYQgKBkPPfijePqpn8eq116P9Rs2luQ5NI0ZHQceOCrmzjsrWtqaXdQitvyVFXH/vffFihWr4t1160ryHBrq66Lp0ENi8nGTYtac2S6qe0nRPcce/8nj8S///C+x6s23Su74U9VVMXJEOr58zJfj9DmzSnbZ3s6nO+ORhx8p6XvdyMbGaG5uit/67d+yfOF21/Sdd1aX5HOrv695Rxx1RNFPDe7J0rv/Ol58/sWSfo1KVVfFoWMOifZJE2L6jGm+ZzsD69asif/54EPx8ku/itfefD26tnQn6vwL/T6n+8Vno/vRv4tPXv6HiM0lWNYOHhEDv3RCVE0/LaqOGO8J1QdbHl8W2372v+OTV0p0orAiFQNGHhWVx/1OVB33n6JiePY+81MQ9oOCsPwoCEuHghB2T0FIOfzh/PzzLxb9cdbV1SVukqFcdT7dGRs3Fv+HdT4gdy/xHMud0aPHlP0/eDz26GMlcZzudXtv+Ssr4q233izLczvqqCPKuoAqldeopNwf3Z+T+T6n9+NN8ZvXVxR9hvsc0hwDaqwSlU3dLz5bEsdZ0XhAVsvAXVEQ9oOCsPwoCEuHghB2T0EIAAAAAOzJQBEAAAAAAABAcigIAQAAAAAAIEEUhAAAAAAAAJAgCkIAAAAAAABIEAUhAAAAAAAAJIiCEAAAAAAAABJEQQgAAAAAAAAJoiAEAAAAAACABFEQAgAAAAAAQIIoCAEAAAAAACBBFIQAAAAAAACQIApCAAAAAAAASBAFIQAAAAAAACSIghAAAAAAAAASREEIAAAAAAAACaIgBAAAAAAAgARREAIAAAAAAECCKAgBAAAAAAAgQRSEAAAAAAAAkCAKQgAAAAAAAEgQBSEAAAAAAAAkiIIQAAAAAAAAEkRBCAAAAAAAAAmiIITtfLT+IyEAAAAAAABlTUEIAGXmiIbBQgAAAAAAdktBCDtYs/pdIQAAAAAAAGVLQQg72Lx5sxCAknZIvQlCAAAAAGD3FISwgw0bNggBKFlNlQNi30GVggAAAAAAdktBCDvYsHGTEICSNaFmHyEAAAAAAHukIIQdfLT+IyEAJWvCfjVCAAAAAAD2SEEIu/DWG28IAShJh9RVCwEAAAAA2CMFIezC+l+vFwJQko7Yv1YIAAAAAMAeKQhhF9atfV8IQMk5uaYq9h1UKQgAAAAAYI8UhLALXV1b48MPfi0IoKSM3y8lBAAAAADgCykIYTdWrFwlBKCkdIysEwIAAAAA8IUUhLAb69a+H1s3dwkCKAmTBg2MsUN9/yAAAAAA8MUUhLAbPdt6YvXq1YIASkLH/vsKAQAAAADYKwpC2IMVy1cKASgJpx0yVAgAAAAAwF5REMIedHVtjddWKAmB4nZmfVWMqKkWBAAAAACwVxSE8AVMEQLFbkZ6PyEAAAAAAHtNQQhfwBQhUMwmDRoY08Y0CAIAAAAA2GsKQtgLK5avjK2buwQBFJ3zD95fCAAAAABAnygIYS90dW2N5cuXCwIoKqYHAQAAAIBMKAhhL61a+UZs2LBBEEDRMD0IAAAAAGRCQQh98Ow//1IIQFE4uabK9CAAAAAAkBEFIfTBR+s/ilde/pUggIK7uGWYEAAAAACAjCgIoY9eeXl5fPjBrwUBFMyfjayPo4bXCQIAAAAAyIiCEDLwi85/iq2buwQB5N2kQQNjXvNwQQAAAAAAGVMQQga6urbG0z//hSCAvPveUSNj30GVggAAAAAAMqYghAx9tP6j6Hy6UxBA3tx56P4xdmitIAAAAACAflEQQj+8t3pNPPvMPwsCyLlFw2vitLHDBAEAAAAA9JuCEPrpzTfeiddWrBQEkDMn11TF+V86QBAAAAAAQFYoCCELnn/upXjhl88JAsi6k2uq4pZjR/veQQAAAAAgaxSEkCWrVr7hOwmBrFIOAgAAAAC5oCCELHpv9Zp48qc/i62bu4QB9ItyEAAAAADIFQUhZNkH6z6In/7jk/HhB78WBpCR8xoGKwcBAAAAgJxREEIObNr4cTz55NPxysu/EgbQJ38+ekhcPUE5CAAAAADkjk8fIUd6tvXEKy8vj7Vr34/xxxwd9fX1QgF2a9KggXHNl9Jx1PA6YQAAAAAAOaUghBz7aP1H8X9+8n9jzMEHxpe+9KUYNDglFOBz/mxkfcxrHm5qEAAAAADIC59EQp68+cY78c4778XBBx8ULS0tikIgFg2vifktw2NETbUwAAAAAIC8URBCHvVs64lVK9+IVSvfiANGpSOdbozRBx8smAz0bt0sBEpSU+WAOGXoYMUgAAAAAFAwCkIokPdWr4n3Vq+J5375YjSOGB7D9m+I/RuH+67CvTTwN91CoGQ0VQ6IqfWpmDysNian6y0lCgAAAAAUlE8oocB6tvX8e1kYEVFRWRF19XVRWVkZ9XW1AtqNuq3b4sz6IYKgKB0waJ8YmaqKYal94pC6QTF2qOcyAAAAAFA8FIRQZHq29cRH6z+KiIgP1n0gkN0Y0jAkvv/VYwQBAAAAAAB9NFAEmaupqRECAAAAAAAAJUVB2A+DBw8WAgAAAAAAACVFQQiUpMpKKyQDAAAAAEAmFIRASaqvqxUCAAAAAABkQEHYD0OHDhUCAAAAAAAAJUVB2A+DBqeEAAVSv1+9EAAAAAAAIAMKwn6qqKwQAhRA1T5VQgAAAAAAgAwoCPuprr5OCFAAlvgFAAAAAIDMKAj7qbKyUgiQZxWVFZb4BQAAAACADCkI+6m+rlYIkGcmdwEAAAAAIHMKwn6q369eCJBnDUP3EwIAAAAAAGRIQdhP+9buKwTIM8U8AAAAAABkTkHYT0OH7S8EyLP9hg4VAgAAAAAAZEhBmAVDGoYIAfIklRoU9fUmCAEAAAAAIFMKwiyor6sVAuTJkAbTgwAAAAAA0B8Kwixo2L9BCJAnwzzfAAAAAACgXxSEWTCicYQQIE9GjRolBAAAAAAA6AcFYRYMGpyK2roaQUCODWscFoMGpwQBAAAAAAD9oCDMkhGNw4UAOXZAulEIAAAAAADQTwrCLLHsIXieAQAAAABAKVAQZsnQYftHKjVIEJAjB4xKW14UAAAAAACyQEGYRSNHHSAEyJHRBx0oBAAAAAAAyAIFYRaNPuRgIUAODGkYEulRIwUBAAAAAABZoCDMovr6+hjWOEwQkGUHHagcBAAAAACAbFEQZlnToaYIIZtSqUFxaPNYQQAAAAAAQJYoCLMsPWpkDGkYIgjIknFHHyUEAAAAAADIIgVhDrS2mHaCbPDdgwAAAAAAkH0KwhwwRQjZMf6Yo4UAAAAAAABZpiDMkaOOPFwI0A9NYw+O+vp6QQAAAAAAQJYpCHNk6LD9o2nswYKADAxpGBJHHj1OEAAAAAAAkAMKwhw68uhxUVtXIwjog1RqUEyeNFEQAAAAAACQIwrCHJs4aWJUVFYIAvZCRWVFTGw/NgYNTgkDAAAAAAByREGYY/X19XH88ZOVhPAFKior4vjjJ8fQYfsLAwAAAAAAckhBmAdDh+2vJIQ9UA4CAAAAAED+DOjt7e0VQ358+MGv4xed/xRdXVuFAZ+qrauJiZMmRn19vTAAAAAAACAPFIR5tnVzV/zyuefjvdVrhEGiVVRWxMEHHxRHHj1OGAAAAAAAkEcKwgJZs/rdWPXaG/HBug+EQaJ8Vgy2tLTEoMEpgQAAAAAAQJ4pCAts6+auWL16dWzYsCE2bNwkEMpSZWVl1NfVxrBhwyI9aqRAAAAAAACggBSEAAAAAAAAkCADRQAAAAAAAADJoSAEAAAAAACABFEQAgAAAAAAQIIoCAEAAAAAACBBFIQAAAAAAACQIApCAAAAAAAASBAFIQAAAAAAACSIghAAAAAAAAASREEIAAAAAAAACaIgBAAAAAAAgARREAIAAAAAAECCKAgBAAAAAAAgQRSEAAAAAAAAkCAKQgAAAAAAAEgQBSEAAAAAAAAkiIIQAAAAAAAAEkRBCAAAAAAAAAmiIAQAAAAAAIAEURACAAAAAABAgigIAQAAAAAAIEEUhAAAAAAAAJAgCkIAAAAAAABIEAUhAAAAAAAAJIiCEAAAAAAAABJEQQgAAAAAAAAJoiAEAAAAAACABFEQAgAAAAAAQIIoCAEAAAAAACBBFIQAAAAAAACQIApCAAAAAAAASBAFIQAAAAAAACSIghAAAAAAAAASREEIAAAAAAAACfL/AdtDFSi1Ka2/AAAAAElFTkSuQmCC') no-repeat; background-size: contain;"></div>
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Officiellement : Bonjour !</span></p>
+---
+class: center, middle, inverse, title-slide
+name: officiellement-bonjour
+
+## Officiellement : Bonjour !
+### **
+---
+class: slide
+
+
+
+
+
+
+
+### Bonjour et bienvenue !
+
+.pull-left[
+
+&lt;br&gt;
+&lt;br&gt;
+
+### A propos de ThinkR
+
+&lt;br&gt;
+
+ThinkR est une société composée d’experts, leaders de la **formation R** en France.
+
+ThinkR réalise également :
+- des **prestations** de développement R,
+- des **accompagnements** aux bonnes pratiques de devéloppement.
+
+]
+
+.pull-right[
+&lt;img src="stagiaire_complet_files/C01-bonjour_files/images/kakemono-thinkr-min.png" width="75%" /&gt;
+]
+
+---
+class: slide
+
+
+### Bonjour et bienvenue !
+
+&lt;br&gt;
+&lt;br&gt;
+
+### A propos de moi
+
+- D'où je viens ?
+
+- Ce que j'ai fait avant d'être devant vous ?
+
+- Depuis combien de temps je suis chez ThinkR ?
+
+- Pourquoi aujourd'hui je vous forme à R ?
+
+???
+Permet de mettre les gens à l'aise pour se présenter eux-mêmes
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Timing</span></p>
+---
+class: center, middle, inverse, title-slide
+name: timing
+
+## Timing
+### Modalités pratiques
+---
+class: slide
+
+
+
+
+### Concentration &amp; Pauses
+
+.pull-left[
+
+#### Pause de 5 minutes toutes les 60 minutes.
+&lt;https://thinkr-open.github.io/timer&gt;
+
++ **Pourquoi une pause de 5 minutes ?**
+
+Temps nécessaire pour "décrocher" (à condition de *vraiment* décrocher de son écran) tout en se souvenant ce qu'on était en train de faire avant de partir en pause.
+
++ **Pourquoi toutes les 60 minutes ?**
+
+Temps maximum d'attention.
+
+
+&lt;br&gt; 
+
+&gt; N'hésitez pas à le rappeler à votre formateurice s'il oublie et que vous en ressentez le besoin.
+
+&gt; Si vous avez besoin d'une pause avant, dites-le lui aussi !
+
+]
+
+.pull-right[
+&lt;img src="stagiaire_complet_files/C03-planning_files/images/pause_btn.jpg" width="60%" /&gt;
+&lt;img src="stagiaire_complet_files/C03-planning_files/images/chrono_5min.png" width="50%" /&gt;
+]
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Workshop User2022</span></p>
+---
+class: center, middle, inverse, title-slide
+name: workshop-user2022
+
+## Workshop User2022
+### Comment déployer une application shiny
+---
+
+layout: true
+&lt;p class="top"&gt;
+.top_right[
+![](stagiaire_complet_files/objectif_files/images/hex_shiny.png)
+]
+&lt;/p&gt;
+
+&lt;style&gt;
+.small_code pre{
+font-size: small !important ; 
+}
+.xsmall_code pre{
+font-size: x-small !important ; 
+}
+&lt;/style&gt;
+
+
+
+
+&lt;link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"&gt;
+---
+class: slide
+
+# Les Objectifs de ce Workshop
+
+- Comprendre et mettre en oeuvre un déploiement d'une application {shiny}
+- Comprendre l'intérêt de {golem} pour déployer une applivation
+- Savoir déployer une application sur Connect
+- Dockeriser une application {shiny}
+- Savoir déployer une application avec ShinyProxy
+
+---
+class: slide
+
+## Les outils
+
+- Une application {shiny} developpé avec {golem}: dossier `hangman`
+- Un Rstudio pour les manipulations &lt;https://rstudio.cervangirard.me&gt;
+- Un connect pour le déploiement  &lt;https://connect.cervangirard.me&gt;
+- Un ShinyProxy pour le déploiement 
+  - &lt;https://sp.cervangirard.me/sp-votrenom&gt;
+  - exemple pour cervan : &lt;https://sp.cervangirard.me/sp-cervan&gt;
+
+---
+class: slide 
+
+### Régardons l'application à déployer
+
+- Ouvrir le projet rstudio du dossier hangman
+- Lancer l'application avec golem::run_dev.R
+
+---
+class: middle title-center
+
+# Une app avec {golem}, c'est quoi ?
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Introduction à {golem}</span></p>
+---
+class: center, middle, inverse, title-slide
+name: introduction-a-golem
+
+## Introduction à {golem}
+### Un outil pour les gouverner tous!
+---
+
+layout: true
+&lt;p class="top"&gt;
+.top_right[
+![](stagiaire_complet_files/intro-golem_files/images/hex_golem.png)
+]
+&lt;/p&gt;
+
+&lt;style&gt;
+.small_code pre{
+  font-size: small !important ; 
+}
+.xsmall_code pre{
+  font-size: x-small !important ; 
+}
+&lt;/style&gt;
+
+&lt;link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"&gt;
+
+
+
+
+---
+class: slide
+
+### {golem} ? 
+
+`{golem}` est un __package R__ destiné à la création d'applications Shiny pour la production. 
+
+Utiliser ce package impose un cadre relativement strict, mais permet de se passer des réflexions techniques d'infrastructure. 
+
+Même si le framework peut sembler imposant de prime abord, en pratique le workflow est assez simple à suivre.
+
+### Installer {golem}
+
+&lt;pre class='rcode-input'&gt;&lt;span class='comment'&gt;# install.packages("remotes")&lt;/span&gt;
+&lt;span class='comment'&gt;# remotes::install_github("Thinkr-open/golem") # version de dev&lt;/span&gt;
+&lt;span class='functioncall'&gt;install.packages&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='string'&gt;"golem"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+
+---
+class: slide
+
+### Pourquoi un package ?
+
+Développer une application Shiny dans un package permet de :
+
++ Documenter son code.
+
++ Utiliser les infrastructures de test natives.
+
++ Faciliter la maintenance sur le long terme.
+
++ Gérer ses fichiers de manière efficace.
+
++ Bénéficier des outils "classiques" de développement (`{devtools}`, `{usethis}`, `{testthat}`, ...).
+
++ Standardiser le déploiement sur les différentes plateformes (RStudio Connect, ShinyApps.io, via Docker...)
+
+---
+class: slide
+
+### Lancer {golem}
+
+&lt;img src = "stagiaire_complet_files/intro-golem_files/images/golemtemplate.png", width = "80%"&gt;
+
+---
+class: slide
+
+### Structure d'un golem
+
+.pull-left[
+```
+DESCRIPTION               
+  ¦--dev/          
+    ¦--01_start.R           
+    ¦--02_dev.R           
+    ¦--03_deploy.R          
+    ¦--run_dev.R
+  ¦--inst/ 
+    ¦--app                
+      ¦--www/          
+        ¦--favicon.ico
+  ¦--man/ 
+    ¦--run_app.Rd      
+NAMESPACE
+monapp.Rproj
+  ¦--R/ 
+    ¦--app_config.R  
+    ¦--app_server.R       
+    ¦--app_ui.R           
+    ¦--run_app.R      
+```
+]
+
+.pull-right[
++ DESCRIPTION &amp; NAMESPACE : Méta données du package.
+
++ dev/ : workflow de développement.
+
++ inst : ressources externes.
+
++ man : documentation de l'app, se génère automatiquement.
+
++ monapp.Rproj : projet RStudio.
+
++ R/app_config.R: fichier interne de configuration.
+
++ R/app_server.R, app_ui.R : Fichiers contenant des fonctions pour construire server et ui. 
+
++ R/run_app.R : fonction qui va configurer et lancer l'app. 
+
+]
+
+---
+class: slide
+
+### 01_start.R
+
+Commençons par remplir les métadonnées (une fois pour toute) de notre package : 
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;fill_desc&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;pkg_name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"nasapp"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;pkg_title&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"Visualisation en Direct de l'ISS"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;pkg_description&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"Visualiser en Direct la position de l'ISS"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;author_first_name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"colin"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;author_last_name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"fay"&lt;/span&gt; &lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;author_email&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"colin@thinkr.fr"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;repo_url&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='NA'&gt;NULL&lt;/span&gt;
+&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+---
+class: slide
+
+### 01_start.R
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_mit_license&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='symbol_argument'&gt;name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"Colin Fay"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_readme_rmd&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_code_of_conduct&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_lifecycle_badge&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"Experimental"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_news_md&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_data_raw&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_recommended_tests&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_recommended_deps&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_utils_ui&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_utils_server&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_favicon&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='symbol_argument'&gt;path&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"path/to/favicon"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+---
+class: slide
+
+### 02_dev.R
+
+Engineering de l'application, au quotidien :
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_package&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"thinkr"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_module&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='symbol_argument'&gt;name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"name_of_module1"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_fct&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"helpers"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_utils&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"helpers"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_js_file&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"script"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_js_handler&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"handlers"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_css_file&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='string'&gt;"custom"&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;usethis&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;use_data_raw&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt; &lt;span class='symbol_argument'&gt;name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"my_dataset"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt; &lt;span class='symbol_argument'&gt;open&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='number'&gt;FALSE&lt;/span&gt; &lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+---
+class: slide
+
+### 03_deploy.R
+
+À la fin, une fois que l'on souhaite déployer :
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;devtools&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;check&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;rhub&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;check_for_cran&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_rstudioconnect_file&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_shinyappsio_file&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_shinyserver_file&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_dockerfile&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_dockerfile_shinyproxy&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_dockerfile_heroku&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+
+---
+class: slide
+
+### Et maintenant ? 
+
+Comment compléter votre `{golem}` ?
+
++ app_ui.R recevra la partie UI 
+
++ app_server.R recevra la contrepartie serveur
+
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​RStudio Connect</span></p>
+---
+class: center, middle, inverse, title-slide
+name: shiny-server-rstudio-connect
+
+## RStudio Connect
+### Diffuser ses applications
+---
+layout: true
+.top_right[
+![](stagiaire_complet_files/C01-shiny_rconnect_files/images/hex_shiny.png)
+]
+
+
+---
+class: slide
+
+### Rstudio Connect
+
+Le but de Rstudio Connect :
+
++ Partager votre travail sans effort
+
++ Faciliter la gestions des dépendances
+
++ Gagner du temps dans le déploiement
+
+
+---
+class: slide
+
+### Rstudio Connect
+
+Permet de déployer des applications shiny mais pas seulement.
+
++ Les rmarkdowns sont très bien intégrés avec beaucoup de fonctionnalité
+
++ Possibilité de déployer des applications python
+
+Regardons à quoi cela ressemble : 
+
+&lt;https://connect.cervangirard.me&gt;
+
+
+---
+class: slide
+
+### TD 
+
+Dans un premier temps, regarder votre formateur faire et puis on vous laissera le temps de le refaire :) .
+
+Déployons un Rmd ensemble :
+
+- Créer un nouveau Rmd
+  * file &gt; New file &gt; Rmarkdown
+  
+- Cliquer sur le bouton bleu
+
+- Choisir "Publish just this document"
+
+Il faut maintenant ajouter notre Connect :
+
+- Ajouter l'adresse suivante `connect.cervangirard.me` ici :
+
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/ajout_connect.png" width = "600px"&gt;
+
+
+---
+class: slide
+
+### TD 
+
+- Se connecter à Connect avec votre identifiant et votre mot de passe
+
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/connect_connexion.png" width = "600px"&gt;
+
+---
+class: slide
+
+### TD 
+
+- Quand vous avez réussi à vous connecter, vous pouvez alors choisir votre Connect
+
+.pull-left[
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/good_for_connect.png" width = "400px"&gt;
+]
+.pull-right[
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/choose_connect.png" width = "400px"&gt;
+]
+
+- Cliquer sur "Publish"
+
+---
+class: slide
+
+### Comment déployer une application {shiny} avec {golem} et RSconnect
+
+Rstudio intégre déjà des fonctionnalités pour déployer avec Connect.
+
+Il va reconnaitre que vous manipuler une application et il va alors vous proposer "le bouton bleu" !
+
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/app_bouton_bleu.png" width = "600px"&gt;
+
+De même pour {golem}, des fonctionnalités permettent d'ajouter les fichiers nécéssaires au déploiement.
+
+---
+class: slide
+
+#### TD
+
+Dans un premier temps, regarder votre formateur faire et puis on vous laissera le temps de le refaire :) .
+
+- Ajouter le fichier `app.R` avec `golem::add_rstudioconnect_file()`
+
+- Ouvrir le fichier `app.R`
+
+&lt;img src = "stagiaire_complet_files/C01-shiny_rconnect_files/images/app_r.png" width = "600px"&gt;
+
+- Cliquer sur le bouton bleu.
+
+
+---
+class: slide
+
+## Et sans bouton bleu magique ??
+
+Le bouton magique est intégré à Rstudio mais comment faire sans lui ?
+
+Le package `{rsconnect}` est fait pour ça !
+
+---
+class: slide
+
+## Déployer une application avec `{rsconnect}`
+
+Dans un premier temps, regarder votre formateur faire et puis on vous laissera le temps de le refaire :).
+
+- Aller sur connect 
+
+- Creer un token
+
+- Se connecter au serveur avec `{rsconnect}`
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;rsconnect&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;addServer&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='string'&gt;"https://connect.cervangirard.me/__api__"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt; &lt;span class='symbol_argument'&gt;name&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"connect"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='package'&gt;rsconnect&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;connectApiUser&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='symbol_argument'&gt;account&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"cervan"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt; &lt;span class='symbol_argument'&gt;server&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"connect"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt; &lt;span class='symbol_argument'&gt;apiKey&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='functioncall'&gt;Sys.getenv&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='string'&gt;"API_CONNECT"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+- Déployer son application
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;rsconnect&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;deployApp&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;account&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"cervan"&lt;/span&gt;&lt;span class='keyword'&gt;,&lt;/span&gt;
+  &lt;span class='symbol_argument'&gt;server&lt;/span&gt;  &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"connect"&lt;/span&gt;
+&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+
+---
+class: slide
+
+## BONUS : Déployer notre application avec un CI
+
+Voici les étapes:
+
+- Ajouter un script dans le dossier `dev /deploy.R`avec les commandes précédentes
+
+- Ajouter un gitlab-ci.yml et l'amender avec une étape deploy
+
+- Faire en sorte que cette épate lance notre script `dev/deploy.R`
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Shinyproxy et docker !Une autre solution pour déployer</span></p>
+---
+class: center, middle, inverse, title-slide
+name: transi1
+
+## Shinyproxy et docker !Une autre solution pour déployer
+### Une autre solution pour déployer
+---
+class: slide 
+
+### Shinyproxy et docker !
+
+Pour pouvoir déployer une application sur ShinyProxy, il faut connaitre docker !
+
+*Disclaimer: le but de ce tuto n'est pas de vous former à docker, il faudra approfondir de votre côté mais nous allons tenter de vous donner les bases pour déployer une app avec ShinyProxy*
+
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Docker</span></p>
+---
+class: center, middle, inverse, title-slide
+name: docker
+
+## Docker
+### Moby dock, votre nouvelle meilleure amie
+---
+class: slide 
+
+### Docker 
+
+.pull-left[Docker est un logiciel libre relativement récent (2013), plébiscité par sa "simplicité" et son efficacité.
+
+_" Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur."_. 
+&gt; Wikipedia
+
+]
+
+.pull-right[
+
+![](stagiaire_complet_files/C02_docker_intro_files/images/dockerlogo.png)
+
+]
+
+---
+class: slide 
+
+### Docker 
+
+Docker en quelques mots : 
+
++ Permet d'empaqueter et de lancer un ou plusieurs applicatifs
+
++ Fonctionne avec différents système d'opération (OS)
+
++ Peut être lancé en local, ou sur un serveur
+
++ Partage de manière intelligente les resources de la machine 
+
+
+
+---
+class: slide 
+
+### Docker 
+
+Pourquoi utiliser Docker (avec R) ? :
+
++ simplifie/supprime les soucis de dépendances
+
++ isole complètement un environnement
+
++ facilite la portabilité de l'application
+
++ la solution est réutilisable et amendable
+
+-&gt; permet de déployer votre application R (shiny ou non) partout où docker peut être installé (c'est-à-dire à peu prêt partout).
+
+-&gt; beaucoup plus léger et rapide qu'une machine virtuelle.
+
+---
+class: slide 
+
+### Docker, exemples 
+
++ [ShinyProxy](https://www.shinyproxy.io/)
+
++ [r-online](https://srv.colinfay.me/r-online)
+
++ [r-ci](https://github.com/ColinFay/r-ci)
+
++ [r-db](http://colinfay.me/r-db/)
+
+---
+
+class: slide 
+
+### Docker, terminologie
+
+Docker repose sur le principe de __conteneurs__. 
+
+Un conteneur va "contenir" une application et toutes les dépendances nécessaires à son bon fonctionnement. 
+
+Notions importantes :
+
++ __conteneurs__ : ce qui va faire tourner les applications.
+
++ __images__ : environnement pré-conçues qui décrivent ce que devront faire les conteneurs.
+
++ __registry__ : dépôt qui regroupe les images de la communauté
+
++ __dockerfile__ : fichier texte qui correspond à la « recette » d'une image (permet de construire une image).
+
+---
+class: slide 
+
+### Principales commandes
+
+`docker pull &lt;utilisateur&gt;/&lt;nom_image&gt; `
+
+-&gt; Télécharge l'image &lt;nom_image&gt; mis a disposition par l'&lt;utilisateur&gt; sur le registry.
+
+Exemple : `docker pull thinkr/rfull `
+
+-&gt; télécharge une image dédié à R proposée par thinkr.
+
+`docker pull alpine`.
+
+-&gt; une image très légère de linux, pas besoin de préciser l'utilisateur, car c'est une image « officielle »
+
+L'instruction pull ne fait que télécharger une image, aucun conteneurs n'est fabriqué. Pour fabriquer (télécharger et lancer) un conteneurs on peut utiliser directement docker run 
+
+`docker run -it ubuntu `
+
+La dernière ubuntu est téléchargée, et lancée en donnant la main à l'utilisateur.
+---
+class: slide 
+
+### Les principaux arguments de docker run
+
++ -i : lance le conteneurs en mode interactif.
++ -t : à utiliser avec -i pour avoir un terminal (it).
++ -p : connecte un port de la machine sur un port du conteneurs.
++ -d : lance le conteneurs en mode « détaché »
++ -v : monte un dossier du conteneurs avec un dossier de la machine.
++ --name : donne un nom au conteneurs.
+
+Exemple : 
+Que fait l'instruction suivante ? :
+
+`docker run -d -e PASSWORD=coucou -p 80:8787 rocker/tidyverse`
+---
+class: slide 
+
+### Gérer les conteneurs
+
+`docker ps`
+
+-&gt; liste les conteneurs qui tournent sur la machine.
+
+`docker ps -a `
+
+-&gt; liste tout les conteneurss, même ceux qui ne tournent pas.
+
+`docker stop &lt;conteneurs-id&gt;`
+
+-&gt; stop le conteneurs qui était en train de tourner (docker kill &lt;conteneurs-id&gt; en est la version brutale)
+
+`docker start &lt;conteneurs-id&gt;`
+
+-&gt; relance le conteneurs qui était en train de tourner.
+
+`docker exec -it &lt;conteneurs-id&gt; bash `
+
+-&gt; ouvre un terminal dans un conteneurs en cours d'exécution.
+
+
+---
+class: slide 
+
+### Docker 
+
+`docker rm &lt;conteneurs-id&gt;` 
+
+-&gt; efface un conteneurs.
+
+`docker rmi &lt;nom_image&gt; `
+
+-&gt; efface une image.
+
+`docker rm -f $(docker ps a q)`
+
+-&gt; efface TOUS les conteneurss.
+
+`docker rmi -f $(docker images q)`
+
+-&gt; efface TOUTES les images.
+
+---
+class: slide 
+
+### Docker et R 
+
+Et R dans tout ca ?
+
+Il est très aisé de construire sa propre image docker dont le but sera d'afficher votre application shiny.
+
+Le plus simple est de partir depuis une image préexistante et de la modifier pour qu'elle convienne à notre besoin.
+
+[https://hub.docker.com/u/rocker/](https://hub.docker.com/u/rocker/)
+
+Le projet rocker regroupe un certain nombre d'images pré-conçues qui vous permettent d'utiliser R dans docker (sans devoir tout monter depuis un linux « vide »).
+---
+class: slide 
+
+### Créer sa propre image
+
+ -&gt; DOCKERFILE.
+
+Construire sa propre image docker se résume à écrire un fichier DOCKERFILE, ce fichier contient la liste d'instruction à exécuter dans un conteneurs existant pour y installer tout ce dont vous avez besoin pour lancer votre application.
+
+Un DOCKERFILE est une succession d'instruction, 1 ligne = 1 instruction.
+Chaque instruction commence par une de ces balises :
+
++ FROM : précise l'image de base qui sera utilisée en point de départ.
++ MAINTAINER : précise l'auteur de l'image.
++ RUN : lance une instruction bash classique.
++ COPY : copie un fichier de la machine vers l'image.
++ EXPOSE : ouvre des ports sur la machine.
++ CMD : indique la commande à exécuter juste après avoir lancé un conteneurs.
+
+---
+
+class: slide 
+
+### Dockerfile 
+
+Dans un fichier DOCKERFILE.
+
+&lt;pre class='rcode-input'&gt;
+FROM rocker/r-ver
+CMD ["R", "-e", "message('Coucou depuis docker')"]
+&lt;/pre&gt;
+
+-&gt; Après avoir trouver sa recette de cuisine, on peut construire notre image qui sera lancé par notre conteneur avec `docker build`.
+
+Dans le terminal, en se mettant dans le même dossier que le fichier DOCKERFILE :
+
+&lt;pre class='rcode-input'&gt;
+docker build -t coucou .
+docker run coucou
+&lt;/pre&gt;
+
+---
+class: slide
+
+### Résumons
+
+- On déclare notre recette de cuisine dans un Dockerfile
+- On construit une image avec ce Dockerfile
+- On peut lancer un conteneur qui éxécutera cette image
+
+
+---
+class: slide 
+
+### Créer sa propre image avec {dockerfiler}
+
+&lt;pre class='rcode-input'&gt;&lt;span class='functioncall'&gt;library&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='symbol'&gt;dockerfiler&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='symbol'&gt;mine&lt;/span&gt; &lt;span class='assignment'&gt;&amp;lt;-&lt;/span&gt; &lt;span class='symbol'&gt;Dockerfile&lt;/span&gt;&lt;span class='keyword'&gt;$&lt;/span&gt;&lt;span class='functioncall'&gt;new&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='symbol'&gt;mine&lt;/span&gt;&lt;span class='keyword'&gt;$&lt;/span&gt;&lt;span class='functioncall'&gt;RUN&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='string'&gt;"apt-get install libxml2 -y"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+&lt;span class='symbol'&gt;mine&lt;/span&gt;&lt;span class='keyword'&gt;$&lt;/span&gt;&lt;span class='functioncall'&gt;RUN&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='functioncall'&gt;r&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='functioncall'&gt;install.packages&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='string'&gt;"shiny"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;
+
+&lt;span class='symbol'&gt;mine&lt;/span&gt;&lt;/pre&gt;
+&lt;pre class='rcode-output'&gt;#&amp;gt; FROM rocker/r-base
+#&amp;gt; RUN apt-get install libxml2 -y
+#&amp;gt; RUN R -e 'install.packages("shiny")'
+&lt;/pre&gt;
+
+---
+class: slide 
+
+### TD
+
+- Faire un Dockerfile qui imprime un message depuis R : "Coucou votre prènom"
+
+- Construire l'image qui devra s'appeler `votreprenom_coucou`
+
+- Lancer cette image dans un conteneur
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Encapsuler une application shiny {golem} avec docker</span></p>
+---
+class: center, middle, inverse, title-slide
+name: encapsuler-une-application-shiny
+
+## Encapsuler une application shiny {golem} avec docker
+### **
+---
+class: slide 
+
+### Encapsuler une application shiny 
+
+Pour diffuser une application shiny, il « suffit » de l'intégrer à un package R avec {golem}. Il est alors possible de bénéficier de tous les avantages des packages :
+
++ Gestion des dépendances.
++ Gestion des versions.
++ Facilité d'installation et déploiement.
++ gestion de la documentation 
+
+---
+class: slide
+
+### {golem} et docker
+
+Une application shiny developpée avec {golem} est avant tout un package et vous avez à votre disposition une fonction `run_app` qui lance l'application.
+
+Grâce à {golem}, vous avez aussi des outils pour vous faciliter la vie pendant votre déploiment.
+
+Construire une Dockerfile pour un {golem} revient à faire : 
+
+- `golem::add_dockerfile()`
+
+---
+class: slide
+
+### TD
+
+Dans un premier temps, regarder votre formateur faire et puis on vous laissera le temps de le refaire :).
+
+- Se mettre dans votre dossier `hangman`
+
+- Construire la dockerfile de l'application `hangman` avec 
+
+&lt;pre class='rcode-input'&gt;&lt;span class='package'&gt;golem&lt;/span&gt;&lt;span class='keyword'&gt;::&lt;/span&gt;&lt;span class='functioncall'&gt;add_dockerfile&lt;/span&gt;&lt;span class='keyword'&gt;(&lt;/span&gt;&lt;span class='symbol_argument'&gt;port&lt;/span&gt; &lt;span class='argument'&gt;=&lt;/span&gt; &lt;span class='string'&gt;"choisir un port entre 32000 et 33000"&lt;/span&gt;&lt;span class='keyword'&gt;)&lt;/span&gt;&lt;/pre&gt;
+
+- Construire son image avec `docker build`, le nom doit être `votreprenom_hangman`
+
+- Lancer L'image avec `docker run` et aller sur sp.cervangirard.me:`le port choisi`
+
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Et ShinyProxy dans tout ça ?</span></p>
+---
+class: center, middle, inverse, title-slide
+name: transi2
+
+## Et ShinyProxy dans tout ça ?
+### **
+---
+class: slide 
+
+### Shinyproxy et docker !
+
+Nous venons de faire le plus dure pour déployer une application Shiny avec ShinyProxy:
+
+**Etre capable de lancer son application avec docker !** 
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Shiny Proxy</span></p>
+---
+class: center, middle, inverse, title-slide
+name: shiny-proxy
+
+## Shiny Proxy
+###  
+---
+class: slide
+
+### Shinyproxy
+
+
+![](stagiaire_complet_files/C04_shiny_shinyproxy_files/images/shinyproxy.png)
+
+
+---
+class: slide
+
+### C'est quoi Shinyproxy ? 
+
++ Outil Open Source d'Open Analytics 
+
++ Écrit en Java 
+
++ Gère le déploiement d'applications avec docker (concu à l'origine pour les apps Shiny)
+
+---
+class: slide
+
+### Comment ça marche ? 
+
+Schématiquement : 
+
++ Chaque utilisateur en lancant l'application va finalement générer un conteneur
+
++ Chaque visiteur a accès à son propre conteneur
+
+Sur la machine qui fait tourner le tout : 
+
++ shinyproxy doit être installé et configuré 
+
++ Chaque application doit avoir sur la machine son image docker
+
+---
+class: slide
+
+### Pourquoi choisir ShinyProxy? 
+
+En tant que dev de l'app :
+
++ Chaque application a son propre environnement
+  + Pas de problème de variables globales
+  + Pas besoin d'optimisation avec {future} et {promises}
+
++ La "home page" est créée nativement et est hautement personnalisable
+
+En tant qu'admin :
+
++ S'installe rapidement avec docker
+
++ Maintenable par le développeur lui même.
+
+&gt; Cependant, shinyproxy demande plus d'effort pour déployer une application. 
+
+
+---
+class: slide
+
+### Ouvrir shinyproxy 
+
++ Direction `https://sp.cercvangirard.me/sp-votreprenom`
+
++ Même identifiant et mdp que Rstudio
+
+
+![](stagiaire_complet_files/C04_shiny_shinyproxy_files/images/sp_installee.png)
+
+---
+class: slide
+
+### Comment configurer votre ShinyProxy ?
+
+La configuration de SP se fait via un seul fichier le **application.yml** !
+
+Regardons ensemble ce qu'il y a dans ce fichier !
+
+---
+class: slide
+
+### Configuration de notre ShinyProxy
+
+La config :
+
+&lt;pre class='rcode-input'&gt;
+proxy:
+  title: Open Analytics Shiny Proxy
+  logo-url: https://www.openanalytics.eu/shinyproxy/logo.png
+  port: 8080
+  authentication: simple
+  admin-groups: admins
+  docker:
+    internal-networking: true
+&lt;/pre&gt;
+
+
+
+---
+class: slide
+
+### Configuration de notre ShinyProxy
+
+Les users :
+
+&lt;pre class='rcode-input'&gt;
+  users:
+  - name: jack
+    password: password
+    groups: admins
+  - name: jeff
+    password: password
+&lt;/pre&gt;
+
+---
+class: slide
+
+### Configuration de notre ShinyProxy
+
+Les apps :
+
+.pull-left[
+
+
+&lt;pre class='rcode-input'&gt;
+  specs:
+  - id: 01_hello
+    display-name: Hello Application
+    description: Application which demonstrates the basics of a Shiny app
+    container-cmd: ["R", "-e", "shinyproxy::run_01_hello()"]
+    container-image: openanalytics/shinyproxy-demo
+    container-network: sp-example-net
+&lt;/pre&gt;
+]
+
+.pull-right[
+La partie qui nous intéresse :
++ id = donne l'id de l'app, peut etre réutilisé pour charger l'app directement `/app/id`
++ display-name, descritpion = information sur la landing-page
++ container-cmd = commande au lancant du conteneur (/!\\ IMPORTANT)
++ container-image = image qui sera lancé par le conteneur (/!\\ IMPORTANT)
++ container-network = configuration liée au déploiement de SP (ne pas modifier !)
+]
+
+---
+class: slide
+
+### Ajouter votre app !
+
+Dans un premier temps, regarder votre formateur faire et puis on vous laissera le temps de le refaire :).
+
+1- S'assurer d'avoir une image de son app {shiny}
+  + Si non, ajouter le dockerfile avec golem::add_dockerfile_shinyproxy et faire un build
+2- Modifier le fichier `application.yaml` dans votre dossier {sp}
+3- Relancer votre ShinuProxy avec le script `start.sh`
+
+---
+class: center middle
+
+## Et c'est tout !
+
+#### SP est hautement configurable, allons faire un tour sur le [site](https://www.shinyproxy.io/)
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Bilan de la formation</span></p>
+---
+class: center, middle, inverse, title-slide
+name: bilan-de-la-formation-generic
+
+## Bilan de la formation
+### Faisons le point
+---
+class: slide
+
+
+
+### Bilan
+
+- Avons-nous répondu à la liste de vos besoins pour cette formation ?
+
+### Ressources
+
+- Pour aller plus loin : "https://rtask.thinkr.fr/blog/"
+- Pour aller plus loin : "thinkr.fr/blog/"
+
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+
+---
+
+
+layout: true
+
+<p class="bottom"><span class="remark-slide-number-left">​Alors ? Qu'en avez-vous pensé ?</span></p>
+---
+class: center, middle, inverse, title-slide
+name: eval-satisfaction-formation
+
+## Alors ? Qu'en avez-vous pensé ?
+### **
+---
+class: slide
+
+
+
+### Évaluation de la formation
+
+Dans un soucis d'amélioration continue, nous recueillons l'impression de nos apprenants sur nos formations. 
+
+L'objectif pour nous est d'améliorer en permanence nos pratiques, pour pouvoir proposer **des formations toujours plus qualitatives**.
+
+- Une *évaluation à chaud* à remplir maintenant
+- Une *évaluation à froid* que vous recevrez dans 30 jours
+
+---
+class: slide
+
+### Satisfaction 
+
+.pull-left[
+
+&lt;img src="stagiaire_complet_files/C01-satisfaction_formation_files/images/avis_verifies.png" width="100%" /&gt;
+
+]
+
+.pull-right[
+
+Vous serez probablement contactés d'ici quelques semaines par le site [www.avis-verifies.com](https://www.avis-verifies.com/avis-clients/thinkr.fr), merci de bien vouloir prendre les 30 secondes nécessaires pour laisser un témoignage.
+
+Ces témoignages contribuent grandement à faire connaitre nos formations.
+
+
+]
+
+
+
+---
+class: slide
+
+### Je n'ai pas le temps de pratiquer !
+
+
+N'oubliez pas que quelle que soit la qualité d'une formation, pour être efficace et utile, il est nécessaire de pratiquer !
+
+--
+
+&lt;br&gt;
+
+On vous propose de continuer à __prendre 15 minutes régulièrement pour réfléchir à comment vous auriez fait un travail donné avec R__ grâce à vos toutes nouvelles connaissances en codage et en bonnes pratiques associées.
+
+__Lancez le chrono. Quand il s'arrête, vous vous arrêtez !__
+
+&lt;br&gt;
+
+--
+
+Si vous ne trouvez pas comment faire tout ce que vous auriez voulu cette fois-ci ce n'est pas grave car vous aurez déjà répondu à la pression avec vos méthodes de travail habituelles.
+
+Comme ça pas de pression, et vous montez doucement en compétences au lieu d'oublier ce que vous aurez appris tout au long de votre formation !
+
+&lt;br&gt;
+
+*Vous trouverez d'autres astuces de Lapin blanc sur [cette page de blog](https://statnmap.com/fr/2021-11-27-je-n-ai-pas-le-temps-de-pratiquer/).*
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+---
+name: cervan-girard
+
+class: inverse, contact-slide
+layout: false
+## Cervan Girard
+### cervan@thinkr.fr
+### 
+
+
+<!--class: inverse, contact-slide
+
+# Contact
+
+## ThinkR - <a href="http://thinkr.fr">http://thinkr.fr</a>-->
+
+    </textarea>
+
+<!-- xaringan style print function -->
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+
+<!-- launch remark.js -->
+<script>
+var nature = {
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"remark-slide-number-right\">Formation R - <a href=\"https://thinkr.fr\">https://thinkr.fr</a> &nbsp;&nbsp; %current% / %total%</div>"
+} ;
+
+var slideshow = remark.create(nature);
+
+if (window.HTMLWidgets){
+  slideshow.on('afterShowSlide', function (slide) {
+    window.dispatchEvent(new Event('resize'));
+  });
+}
+
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+// xaringan print functions
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+
+</script>
+
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+
+  </body>
+</html>

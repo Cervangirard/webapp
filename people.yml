@@ -1,0 +1,120 @@
+cervan:
+  group: docker
+  password: cervan
+  port: 8080
+hms:
+  group: docker
+  password: hms
+  port: 8083
+splines:
+  group: docker
+  password: splines
+  port: 8084
+survival:
+  group: docker
+  password: survival
+  port: 8085
+spatial:
+  group: docker
+  password: spatial
+  port: 8086
+fontawesome:
+  group: docker
+  password: fontawesome
+  port: 8087
+stats4:
+  group: docker
+  password: stats4
+  port: 8088
+tidyselect:
+  group: docker
+  password: tidyselect
+  port: 8089
+base:
+  group: docker
+  password: base
+  port: 8091
+promises:
+  group: docker
+  password: promises
+  port: 8092
+codetools:
+  group: docker
+  password: codetools
+  port: 8093
+purrr:
+  group: docker
+  password: purrr
+  port: 8094
+packrat:
+  group: docker
+  password: packrat
+  port: 8095
+config:
+  group: docker
+  password: config
+  port: 8096
+datasets:
+  group: docker
+  password: datasets
+  port: 8097
+foreign:
+  group: docker
+  password: foreign
+  port: 8098
+nlme:
+  group: docker
+  password: nlme
+  port: 8099
+r6:
+  group: docker
+  password: r6
+  port: 8100
+lifecycle:
+  group: docker
+  password: lifecycle
+  port: 8101
+matrix:
+  group: docker
+  password: matrix
+  port: 8102
+lubridate:
+  group: docker
+  password: lubridate
+  port: 8103
+golem:
+  group: docker
+  password: golem
+  port: 8104
+fusen:
+  group: docker
+  password: fusen
+  port: 8105
+shinipsum:
+  group: docker
+  password: shinipsum
+  port: 8106
+shiny:
+  group: docker
+  password: shiny
+  port: 8107
+gitlabr:
+  group: docker
+  password: gitlabr
+  port: 8108
+rtodoist:
+  group: docker
+  password: rtodoist
+  port: 8109
+prenoms:
+  group: docker
+  password: prenoms
+  port: 8110
+attachment:
+  group: docker
+  password: attachment
+  port: 8111
+signature:
+  group: docker
+  password: signature
+  port: 8112

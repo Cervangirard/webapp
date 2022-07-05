@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Responsive meta tag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+  <title>User 2022</title>
+  <!-- Font awesome icons -->
+  <!-- Css -->
+  <link rel="stylesheet" href="/assets/efrolic.min.css">
+  <link rel="stylesheet" href="/assets/gloden.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
+</head>
+<header id="nav" class="e-nav primary">
+  <!-- Brand or logo that is always visible, usually to the left -->
+  <img src="https://thinkr.fr/wp-content/uploads/2019/04/THINKR-LOGO.png" style="width:90px;height:auto;">
+
+  <!-- Button that detonates the visibility of the container (e-menu) -->
+  <p>Hello, {{.user}} !</p>
+</header>
+
+<body>
+  <div class="e-container-fluid">
+
+    <div id="layoutContainer" style="width:100%;">
+    </div>
+  </div>
+  <script>
+    ok = document.getElementById("nav")
+
+    $("#layoutContainer").css("height", window.innerHeight - ok.offsetHeight - 10);
+    left_content = [{
+      type: 'component',
+      componentName: 'cours',
+      componentState: { label: '/cours/support/stagiaire_complet.html' }
+    }];
+
+
+    right_content = [
+      {
+        type: 'component',
+        componentName: 'rstudio',
+        componentState: { label: 'https://rstudio.cervangirard.me/' }
+      },
+      {
+        type: 'component',
+        componentName: 'connect',
+        componentState: { label: 'https://connect.cervangirard.me/' }
+      },
+      {
+        type: 'component',
+        componentName: 'sp',
+        componentState: { label: 'https://sp.cervangirard.me/sp-{{.user}}' }
+      }
+    ];
+
+    const config = {
+      settings: {
+        hasHeaders: true,
+        constrainDragToContainer: true,
+        reorderEnabled: false,
+        selectionEnabled: false,
+        popoutWholeStack: false,
+        blockedPopoutsThrowError: false,
+        closePopoutsOnUnload: false,
+        showPopoutIcon: false,
+        showMaximiseIcon: false,
+        showCloseIcon: false
+      },
+      content: [{
+        type: 'row',
+        content: [
+          {
+            type: 'stack',
+            content: left_content
+          },
+          {
+            type: 'stack',
+            content: right_content
+          }
+        ]
+      }]
+    };
+
+
+    // On crée le layout et on ajoute les conteneurs avec les iframes
+    // var myLayout = new GoldenLayout(config);
+    let myLayout = new window.GoldenLayout(config, $('#layoutContainer'));
+
+    myLayout.registerComponent("cours", function (container, componentState) {
+      container.getElement().html('<iframe src ="' + componentState.label + '" height="99%" width="99%"></iframe>');
+    });
+
+    myLayout.registerComponent("sp", function (container, componentState) {
+      container.getElement().html('<iframe src ="' + componentState.label + '" height="99%" width="99%"></iframe>');
+    });
+
+    myLayout.registerComponent("rstudio", function (container, componentState) {
+      container.getElement().html('<iframe src ="' + componentState.label + '" height="99%" width="99%"></iframe>');
+    });
+
+    myLayout.registerComponent("connect", function (container, componentState) {
+      container.getElement().html('<iframe src ="' + componentState.label + '" height="99%" width="99%"></iframe>');
+    });
+
+    myLayout.init();
+    window.frames[0].document.onclick = function () {
+      parent.resize()
+    }
+    // function resize() {
+    //   if ($(".lm_goldenlayout").offset() < 64) {
+    //     $(".lm_goldenlayout").css("padding-top", 64 + "px")
+    //   }
+    // }
+
+    // myLayout.on("initialized", () => {
+    //   resize()
+    // })
+
+  </script>
+
+  <!-- <div class="e-cols">
+      <div class="e-col">
+        <iframe src="/cours/" frameborder="0"></iframe>
+      </div>
+      <div class="e-col">
+        <iframe src="https://connect.cervangirard.me" frameborder="0"></iframe>
+      </div>
+      <div class="e-col">
+        <iframe src="https://rstudio.cervangirard.me" frameborder="0"></iframe>
+      </div>
+      <div class="e-col">
+        <iframe src="https://sp.cervangirard.me/sp-{{.user}}" frameborder="0"></iframe>
+      </div>
+    </div> -->
+</body>
+
+</html>
